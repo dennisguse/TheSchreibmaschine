@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        
+        <meta name="author" content="Dennis Guse (dennis.guse@alumni.tu-berlin.de)"></meta>
+        <meta name="license" content="GPLv3" hidden="hidden">
+            <!-- http://www.gnu.org/licenses/gpl-3.0.txt -->
+        </meta>
+        <meta name="license-addition" content="Software is not allowed to be used (directly or indirectly) for military, intelligence, finance or insurance."></meta>
+        <meta name="description" content=""></meta>
+        <meta charset="UTF-8">
+                
+        <script src="jquery-2.0.3.js"></script>
+        <script type="text/javascript">
+            var last = 0;
+            document.onkeydown = function(event) {
+                console.log(event);
+                switch (event.keyCode) {
+                //Navigation
+                case 35:
+                    playSound();
+                    moveCursorEND();
+                    break;
+                case 36:
+                    playSound();
+                    moveCursorPOS1();
+                    break;
+                case 37:
+                    playSound();
+                    moveCursorLeft();
+                    break;
+                case 38:
+                    playSound();
+                    moveCursorUp();
+                    break;
+                case 39:
+                    playSound();
+                    moveCursorRight();
+                    break;
+                case 40:
+                    playSound();
+                    moveCursorDown();
+                    break;
+                //Remove: DEL and STRG+DEL
+                case 8:
+                    playSound();
+                    backspace(event.ctrlKey);
+                    break;
+                case 46:
+                    playSound();
+                    del(event.ctrlKey);
+                    break;
+                }
+            }
+            
+            document.onkeypress = function(event) {
+                //console.log(event);
+                playSound();
+                switch (event.keyCode) {
+                case 13: //Add new paragraph
+                    newParagraph();
+                    break;
+                case 32: // Add space
+                    write("\u00A0");
+                    break;
+                default: //Add text
+                    write(String.fromCharCode(event.charCode));
+                    break;
+                }
+            };
+            
+            function playSound() {
+                new Audio("type.wav").play();
+            }
+            
+            /**
+            Navigation - in a line.
+            */
+            function moveCursorUp() {
+                var cursor = $("#cursor")[0];
+                
+                var newLine = cursor.parentElement.previousElementSibling;
+                if (newLine !== null) {
+                    newLine.appendChild(cursor);
+                    setCurrentParagraph(newLine);
+                }
+            }            
+            function moveCursorDown() {
+                var cursor = $("#cursor")[0];
+
+                var newLine = cursor.parentElement.nextElementSibling;
+                if (newLine !== null) {
+                    newLine.appendChild(cursor);
+                    setCurrentParagraph(newLine);
+                }
+            }
+            function moveCursorLeft() {
+                var cursor = $("#cursor")[0];
+                if (cursor.previousSibling == null) { //goto end of previous line
+                    moveCursorUp(); //TODO Add current index: end of line
+                    return;
+                }
+                cursor.parentElement.insertBefore(cursor, cursor.previousSibling);
+            }
+            function moveCursorRight() {
+                var cursor = $("#cursor")[0];
+                if (cursor.nextSibling == null) { //goto beginning of next line
+                    moveCursorDown(); //TODO Add current index
+                    return;
+                }
+                cursor.parentElement.insertBefore(cursor, cursor.nextSibling.nextSibling);
+            }
+            
+            function moveCursorAbsolute(newPosition) {
+                var cursor = $("#cursor")[0];
+                var currentParagraph = $("#currentParagraph")[0];
+
+                if (newPosition < 1) {
+                    moveCursorUp();
+                    return
+                }
+                if (newPosition > currentParagraph.childNodes.length + 1) {
+                    moveCursorDown();
+                    return;
+                }
+
+                currentParagraph.insertBefore(cursor, currentParagraph.childNodes[newPosition-1]);
+            }            
+            function moveCursorPOS1() {
+                var cursor = $("#cursor")[0];
+                currentParagraph.insertBefore(cursor, currentParagraph.childNodes[0]);
+            } 
+            function moveCursorEND() {
+                var cursor = $("#cursor")[0];
+                currentParagraph.appendChild(cursor);
+            } 
+             
+                        
+            /**
+            Currentline positioning and highlightening.
+            */
+            window.onresize = function(event) {
+                setCurrentParagraph($("#currentParagraph")[0]);
+            };
+            function setCurrentParagraph(newCurrentParagraph) {
+                //Update id=currentParagraph
+                var oldCurrentParagraph = $("#currentParagraph")[0]; 
+                if (oldCurrentParagraph !== undefined && newCurrentParagraph !== oldCurrentParagraph) {
+                    oldCurrentParagraph.removeAttribute("id");
+                    oldCurrentParagraph.className = "";
+                }
+                newCurrentParagraph.id = "currentParagraph";
+                newCurrentParagraph.className = "currentParagraph";
+                //Compute offsetHeight
+                currentParagraphIndex = [].indexOf.call(newCurrentParagraph.parentNode.children, newCurrentParagraph);
+                    
+                var lineHeight = 0;
+                for(var idx=0; idx < currentParagraphIndex; idx++) {
+                     lineHeight += page.children[idx].offsetHeight;
+                }
+                lineHeight += currentParagraph.offsetHeight / 2;
+                    
+                centeringOffset = (window.innerHeight / 2) - lineHeight;
+                //console.log("DEBUG:setCurrentParagraph: " + lineHeight + " " + centeringOffset);
+
+                page.style.top = centeringOffset + "px";
+            }
+
+
+            /**
+            Writing, deleting and adding new lines.
+            
+            + If character is a string, a new textNode is created, otherwise not.
+            */
+            function write(character) {
+                var cursor = $("#cursor")[0];
+                //console.log("writing " + character);
+
+                if (character == "\n") {
+                    newParagraph();
+                    return;
+                }
+                
+                var currentParagraph = $("#currentParagraph")[0];
+                var preHeight = currentParagraph.offsetHeight;
+                
+                if (typeof character == 'string' || character instanceof String) { //TODO If string is longer, need to split
+                    var toAdd = document.createTextNode(character);
+                } else toAdd = character;
+
+                currentParagraph.insertBefore(toAdd, cursor);
+            }
+
+            function backspace() {
+                console.log("Backspace");
+                var cursor = $("#cursor")[0];
+                var currentParagraph = $("#currentParagraph")[0];
+
+                if (cursor.previousSibling === null) { //Remove line and append to previous
+                    var previousLine = currentParagraph.previousElementSibling;
+                    if (previousLine != null) {
+                        moveCursorLeft();
+
+                        var toAppend = currentParagraph.childNodes.length;
+                        for(var i = 0; i < toAppend; i++) {
+                            write(currentParagraph.removeChild(currentParagraph.firstChild));
+                        }
+
+                        currentParagraph.remove(); //Now remove the line.
+                    }
+                    return;
+                }
+                //Normal delete
+                cursor.previousSibling.remove();
+            }
+            
+            function del() {
+                console.log("DEL");
+                moveCursorRight();
+                backspace();
+            }
+            
+            function newParagraph(autoLine) {
+                console.log("New paragraph");
+                var cursor = $("#cursor")[0];
+                var currentParagraph = $("#currentParagraph")[0];
+
+                var newParagraph = document.createElement("div");
+                if (autoLine !== undefined) {
+                    newParagraph.autoLine = true;
+                }
+
+                currentParagraph.parentNode.insertBefore(newParagraph, currentParagraph.nextElementSibling); //Insert paragraph
+
+                moveCursorDown();
+            }
+        </script>
+        <script type="text/javascript">
+            /**
+            Save
+            */
+            function getText() {
+                return $("#page")[0].innerText;
+            }
+            
+            function saveDrag(event) { //requires body:ondragstart="saveDrag(event)"
+    		    console.log("Drag start");
+    			event.dataTransfer.setData("text", getText());
+    	    }
+		
+    		function saveDownload() {
+                var textFileAsBlob = new Blob([getText()], {type:'text/plain'});
+	            var fileNameToSaveAs = "editor.txt";
+
+            	var downloadLink = document.createElement("a");
+            	downloadLink.download = fileNameToSaveAs;
+               	downloadLink.innerHTML = "Download File";
+           		downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
+            	downloadLink.click();
+            }
+        </script>
+        <script type="text/javascript">
+            /**
+            Load data from a file or clipboard.
+            TODO: No error check done.
+            */            
+            function loadAllowDrop(event) {
+                //console.log("Allow drop");
+                event.stopPropagation();
+                event.preventDefault();
+                event.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+            }
+
+            function loadDrop(event) {
+                loadAllowDrop(event);
+                console.log("Load file");
+
+                if (event.dataTransfer.types.indexOf("text/plain") >= 0) {
+                    var content = event.dataTransfer.getData("text/plain");
+                    console.log(content);
+                    for(var i=0; i < content.length; i++) {
+                        write(content[i]);
+                    }
+                    return; //Handle only PLAIN or FILES!
+                }
+                if (event.dataTransfer.types.indexOf("Files") >= 0) {
+                    var files = event.dataTransfer.files;
+                    //Check how multiple files are handled.
+                    for (var i = 0; i < files.length; i++) {
+                        console.log(files[i]);
+                        var reader = new FileReader();
+                        reader.onload = function() {
+                            content = reader.result;
+                            for(var i=0; i < content.length; i++) {
+                                write(content[i]);
+                                console.log(i);
+                            }
+                        }
+                        reader.onerror = function() {
+                            console.log("Error during reading: " + reader.error);
+                        }
+                        reader.readAsText(files[i]);
+                    }
+                }
+            }
+        </script>
+        <style>
+        #editor {
+            position:fixed;
+            width:100%;
+            height:100%;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-box-pack: center;
+            -webkit-box-align: center;
+            text-align: center;
+
+            overflow: hidden;
+            
+            font-family: "courier";
+
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        #page {
+            position: absolute;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            width : 80%;
+            -webkit-transition: top 0.3s;
+ 
+        }
+
+        #page > div {
+            color: lightgrey;
+            min-height: 1.1em; 
+            
+            -webkit-transition: all 0.3s linear;
+            -moz-transition: all 0.3s linear;
+            -o-transition: all 0.3s linear;
+            transition: all 0.3s linear;
+        }
+
+        
+        #page > div.currentParagraph {
+            color: black;
+        }
+                
+        div {
+            word-break: break-all;
+        }
+        
+        #cursor {
+            display: inline-block;
+            background: #111;
+            height:1em;
+            width:0.1em;
+            -webkit-animation: blink 3s infinite;
+        }
+        @-webkit-keyframes blink {
+            0% {opacity: 1;}
+            40% {opacity: 1;}
+            70% {opacity: 0.2;}
+            100% {opacity: 1;}
+        }
+                
+        </style>
+    </head>
+    <body onload="window.onresize()" ondblclick="saveDownload()"
+    draggable="true" ondragstart="saveDrag(event)">
+        <div id="editor" ondrop="loadDrop(event)" ondragover="loadAllowDrop(event)">
+            <div id="page">
+                <div id="currentParagraph"><div id="cursor">&nbsp;</div></div>
+            </div>
+        </div>
+
+    </body>
+</html>
