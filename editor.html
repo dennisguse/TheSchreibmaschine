@@ -71,7 +71,8 @@
             };
             
             function playSound() {
-                new Audio("type.wav").play();
+                var audio = new Audio("type.wav");
+                audio.play();
             }
             
             /**
@@ -153,6 +154,11 @@
                 newCurrentParagraph.id = "currentParagraph";
                 newCurrentParagraph.className = "currentParagraph";
                 //Compute offsetHeight
+                centerCurrentParagraph(newCurrentParagraph);
+            }
+            function centerCurrentParagraph(newCurrentParagraph) {
+                //Old school: centers current paragraph
+                /*newCurrentParagraph = newCurrentParagraph || $("#currentParagraph")[0];
                 currentParagraphIndex = [].indexOf.call(newCurrentParagraph.parentNode.children, newCurrentParagraph);
                     
                 var lineHeight = 0;
@@ -162,8 +168,13 @@
                 lineHeight += currentParagraph.offsetHeight / 2;
                     
                 centeringOffset = (window.innerHeight / 2) - lineHeight;
-                //console.log("DEBUG:setCurrentParagraph: " + lineHeight + " " + centeringOffset);
-
+                //console.log("DEBUG:setCurrentParagraph: " + lineHeight + " " + centeringOffset);*/
+                
+                //New school: center cursor
+                var cursor = $("#cursor");
+                var centeringOffset = (window.innerHeight / 2) - cursor.position().top - cursor[0].offsetHeight;
+                console.log(newOffset);
+                
                 page.style.top = centeringOffset + "px";
             }
 
@@ -190,6 +201,9 @@
                 } else toAdd = character;
 
                 currentParagraph.insertBefore(toAdd, cursor);
+                
+                //TODO Check if necessary.
+                centerCurrentParagraph();
             }
 
             function backspace() {
@@ -213,11 +227,14 @@
                 }
                 //Normal delete
                 cursor.previousSibling.remove();
+                
+                //TODO Check if necessary.
+                centerCurrentParagraph();
             }
             
             function del() {
                 console.log("DEL");
-                moveCursorRight();
+                moveCursorRight(); //TODO Not working properly. (in some cases)
                 backspace();
             }
             
@@ -357,7 +374,8 @@
         }
                 
         div {
-            word-break: break-all;
+            word-wrap: break-word;
+            -webkit-hyphens: none;
         }
         
         #cursor {
