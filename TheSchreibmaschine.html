@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title></title>
+        <title>The Schreibmaschine</title>
         
         <meta name="author" content="Dennis Guse (dennis.guse@alumni.tu-berlin.de)"></meta>
         <meta name="license" content="GPLv3" hidden="hidden">
@@ -9,6 +9,8 @@
         </meta>
         <meta name="license-addition" content="Software is not allowed to be used (directly or indirectly) for military, intelligence, finance or insurance."></meta>
         <meta name="description" content=""></meta>
+	<meta name="version" content="Not yet set."></meta>
+
         <meta charset="UTF-8">
                 
         <script src="jquery-2.0.3.js"></script>
@@ -50,6 +52,26 @@
                 case 46:
                     playSound();
                     del(event.ctrlKey);
+                    break;
+                
+                //Specials
+                case 65: //Toggle text alignment (ALT+A)
+                    if (event.altKey) {
+                        toggleTextAlignment();
+                        event.stopPropagation();
+                    }
+                    break;
+                case 87: //Toggle page width (ALT+W)
+                    if (event.altKey) {
+                        togglePageWidth();
+                        event.stopPropagation();
+                    }
+                    break;
+                case 67: //Toggle color (ALT+C)
+                    if (event.altKey) {
+                        toggleBackgroundColor();
+                        event.stopPropagation();
+                    }
                     break;
                 }
             }
@@ -282,6 +304,29 @@
 
                 moveCursorDown();
             }
+            
+            /**
+            Change the UI.
+            These functions overwrite the styles set by the css class #editor by setting the intended property directly at the editor element. The original value of the CSS definition cannot be accessed and thus the initial value must be guessed. Please make sure to be failsafe here.
+            */
+            function toggleTextAlignment() {
+                if ($("#editor")[0].style.textAlign === "left") 
+                    $("#editor")[0].style.textAlign = "center";
+                else $("#editor")[0].style.textAlign = "left";
+            }
+            
+            function togglePageWidth() {
+                if ($("#page")[0].style.width === "40%") 
+                    $("#page")[0].style.width = "80%";
+                else $("#page")[0].style.width = "40%";
+            }
+
+            function toggleBackgroundColor() {
+                if ($("#editor")[0].style.backgroundColor === "white")
+                    $("#editor")[0].style.backgroundColor = "whitesmoke";
+                else $("#editor")[0].style.backgroundColor = "white";
+            }
+            
         </script>
         <script type="text/javascript">
             /**
@@ -353,6 +398,10 @@
             }
         </script>
         <style>
+        html, body {
+    		height: 100%;
+    		margin: 0;
+    	}
         #editor {
             position:fixed;
             width:100%;

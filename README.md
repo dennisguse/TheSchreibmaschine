@@ -24,6 +24,11 @@ Hidden Features:
 * Download of current text is triggered on double click.
 * Use in fullscreen mode (press F11).
 
+* ALT-A: toggle text alignment (left vs. center).
+* ALT-W: toggle page width (40% or 80% of full window).
+* ALT-C: toggle background color (white vs. whitesmoke).
+* Use your browser's support for zooming in/out to change the font size.
+
 -----
 Limitations:
 * At the moment ONLY tested in Google Chrome and Epiphany.
@@ -64,6 +69,9 @@ All animations and visual things are done in CSS:
 * editor 
 * page
 
+
+Uses JQuery. Thanks.
 -----
 TODO:
 * CTRL-Z?
+* Don't use node.normalize().
