@@ -102,7 +102,21 @@
                     moveCursorUp(); //TODO Add current index: end of line
                     return;
                 }
-                cursor.parentElement.insertBefore(cursor, cursor.previousSibling);
+                if (cursor.previousSibling.nodeType ==  3 && cursor.previousSibling.length == 1) { //Is a text node and must not be splitted.
+                    cursor.parentElement.insertBefore(cursor, cursor.previousSibling);
+                    
+                    cursor.parentElement.normalize(); //Merge textNodes that where introduced.
+                    return;
+                }
+                if (cursor.previousSibling.nodeType ==  3 && cursor.previousSibling.length > 1) { //Is a text node and must be splitted into two; the cursor is inserted between.
+                    var textNodeBefore = cursor.previousSibling;
+                    var textNodeAfter = textNodeBefore.splitText(textNodeBefore.length - 1);
+                    
+                    cursor.parentElement.insertBefore(cursor, textNodeAfter);
+                    
+                    cursor.parentElement.normalize(); //Merge textNodes that where introduced.
+                    return;
+                }
             }
             function moveCursorRight() {
                 var cursor = $("#cursor")[0];
@@ -110,7 +124,21 @@
                     moveCursorDown(); //TODO Add current index
                     return;
                 }
-                cursor.parentElement.insertBefore(cursor, cursor.nextSibling.nextSibling);
+                if (cursor.nextSibling.nodeType ==  3 && cursor.nextSibling.length == 1) { //Is a text node and must not be splitted.
+                    cursor.parentElement.insertBefore(cursor, cursor.nextSibling.nextSibling); //Sadly there is no insert after.
+                    
+                    cursor.parentElement.normalize(); //Merge textNodes that might be introduced.
+                    return;
+                }
+                if (cursor.nextSibling.nodeType ==  3 && cursor.nextSibling.length > 1) { //Is a text node and must be splitted into two; the cursor is inserted between.
+                    var textNodeBefore = cursor.nextSibling;
+                    var textNodeAfter = textNodeBefore.splitText(1);
+                    
+                    cursor.parentElement.insertBefore(cursor, textNodeAfter);
+                    
+                    cursor.parentElement.normalize(); //Merge textNodes that might be introduced.
+                    return;
+                }
             }
             
             function moveCursorAbsolute(newPosition) {
@@ -200,6 +228,9 @@
                 } else toAdd = character;
 
                 currentParagraph.insertBefore(toAdd, cursor);
+                
+                //TODO This removes all unnecessary textNodes by merging them. Should be avoided by rewriting this method.
+                currentParagraph.normalize();
                 
                 //TODO Check if necessary.
                 centerCurrentParagraph();
@@ -400,7 +431,7 @@
     draggable="true" ondragstart="saveDrag(event)">
         <div id="editor" ondrop="loadDrop(event)" ondragover="loadAllowDrop(event)">
             <div id="page">
-                <div id="currentParagraph"><div id="cursor">&nbsp;</div></div>
+                <div id="currentParagraph">Hallo<div id="cursor">&nbsp;</div></div>
             </div>
         </div>
 
