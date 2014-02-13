@@ -78,7 +78,10 @@
             
             document.onkeypress = function(event) {
                 //console.log(event);
-                playSound();
+                $("#audioType")[0].play();
+//                $("#audioType")[0].cloneNode(true).play();
+
+                
                 switch (event.keyCode) {
                 case 13: //Add new paragraph
                     newParagraph();
@@ -91,11 +94,6 @@
                     break;
                 }
             };
-            
-            function playSound() {
-                var audio = new Audio("type.wav");
-                audio.play();
-            }
             
             /**
             Navigation - in a line.
@@ -483,6 +481,11 @@
                 <div id="currentParagraph">Hallo<div id="cursor">&nbsp;</div></div>
             </div>
         </div>
-
     </body>
+    <audio id="audioType" hidden="hidden">
+        <source src="audio/type.ogg" type="audio/ogg">
+        <source src="audio/type.mp3" type="audio/mpeg">
+        <source src="audio/type.opus" type="audio/opus">
+        <source src="audio/type.wav" type="audio/wav">
+    </audio>
 </html>
