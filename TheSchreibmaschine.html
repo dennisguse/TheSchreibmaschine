@@ -78,9 +78,7 @@
             
             document.onkeypress = function(event) {
                 //console.log(event);
-//                $("#audioType")[0].play();
-                $("#audioType")[0].cloneNode(true).play();
-
+                playSound();
                 
                 switch (event.keyCode) {
                 case 13: //Add new paragraph
@@ -93,7 +91,11 @@
                     write(String.fromCharCode(event.charCode));
                     break;
                 }
-            };
+            }
+            
+            function playSound() {
+                $("#audioType")[0].cloneNode(true).play();
+            }
             
             /**
             Navigation - in a line.
@@ -276,7 +278,16 @@
                     return;
                 }
                 //Normal delete
-                cursor.previousSibling.remove();
+                if (cursor.previousSibling.nodeType ==  3 && cursor.previousSibling.length == 1) { //Is a text node and must not be splitted.
+                    cursor.previousSibling.remove();
+                    return;
+                }
+                if (cursor.previousSibling.nodeType ==  3 && cursor.previousSibling.length > 1) { //Is a text node and must be splitted into two; the cursor is inserted between.
+                    cursor.previousSibling.deleteData(cursor.previousSibling.length-1, cursor.previousSibling.length);
+                    
+                    cursor.parentElement.normalize(); //Merge textNodes that might be introduced.
+                    return;
+                }
                 
                 //TODO Check if necessary.
                 centerCurrentParagraph();
@@ -284,7 +295,7 @@
             
             function del() {
                 console.log("DEL");
-                moveCursorRight(); //TODO Not working properly. (in some cases)
+                moveCursorRight(); //TODO Check if cursor has moved, if not then do not apply backspace()!
                 backspace();
             }
             
@@ -439,6 +450,9 @@
             color: lightgrey;
             min-height: 1.1em; 
             
+            -padding-top: 1em;
+            
+            
             -webkit-transition: all 0.3s linear;
             -moz-transition: all 0.3s linear;
             -o-transition: all 0.3s linear;
@@ -448,8 +462,9 @@
         
         #page > div.currentParagraph {
             color: black;
+            -padding-top: 1em;
         }
-                
+
         div {
             word-wrap: break-word;
             -webkit-hyphens: none;
@@ -471,7 +486,7 @@
             70% {opacity: 0.2;}
             100% {opacity: 1;}
         }
-                
+      
         </style>
     </head>
     <body onload="window.onresize()" ondblclick="saveDownload()"
