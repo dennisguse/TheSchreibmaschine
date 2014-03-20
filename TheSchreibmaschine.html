@@ -243,7 +243,7 @@
                 }
                 
                 var currentParagraph = $("#currentParagraph")[0];
-                var preHeight = currentParagraph.offsetHeight;
+                var currentParagraphOldHeight = currentParagraph.offsetHeight;
                 
                 if (typeof character == 'string' || character instanceof String) { //TODO If string is longer, need to split
                     var toAdd = document.createTextNode(character);
@@ -254,8 +254,7 @@
                 //TODO This removes all unnecessary textNodes by merging them. Should be avoided by rewriting this method.
                 currentParagraph.normalize();
                 
-                //TODO Check if necessary.
-                centerCurrentParagraph();
+                if (currentParagraphOldHeight != currentParagraph.offsetHeight) centerCurrentParagraph();
             }
 
             function backspace() {
@@ -263,6 +262,7 @@
                 var cursor = $("#cursor")[0];
                 var currentParagraph = $("#currentParagraph")[0];
 
+                //Line delete.
                 if (cursor.previousSibling === null) { //Remove line and append to previous
                     var previousLine = currentParagraph.previousElementSibling;
                     if (previousLine != null) {
@@ -275,22 +275,22 @@
 
                         currentParagraph.remove(); //Now remove the line.
                     }
-                    return;
-                }
-                //Normal delete
-                if (cursor.previousSibling.nodeType ==  3 && cursor.previousSibling.length == 1) { //Is a text node and must not be splitted.
-                    cursor.previousSibling.remove();
-                    return;
-                }
-                if (cursor.previousSibling.nodeType ==  3 && cursor.previousSibling.length > 1) { //Is a text node and must be splitted into two; the cursor is inserted between.
-                    cursor.previousSibling.deleteData(cursor.previousSibling.length-1, 1);
                     
-                    cursor.parentElement.normalize(); //Merge textNodes that might be introduced.
+                    centerCurrentParagraph();
                     return;
                 }
                 
-                //TODO Check if necessary.
-                centerCurrentParagraph();
+                var currentParagraphOldHeight = currentParagraph.offsetHeight;
+                //Normal delete
+                if (cursor.previousSibling.nodeType ==  3) {
+                    if (cursor.previousSibling.length == 1) { //Is a text node and must not be splitted.
+                        cursor.previousSibling.remove();
+                    } else  { //Is a text node and must be splitted into two; the cursor is inserted between.
+                        cursor.previousSibling.deleteData(cursor.previousSibling.length-1, 1);
+                    }
+                }
+                
+                if (currentParagraphOldHeight != currentParagraph.offsetHeight) centerCurrentParagraph();
             }
             
             function del() {
@@ -345,6 +345,7 @@
             function saveDrag(event) { //requires body:ondragstart="saveDrag(event)"
     		    console.log("Drag start");
     			event.dataTransfer.setData("text", getText());
+    			event.dataTransfer.setData("TheSchreibmaschine", "YES");
     	    }
 		
     		function saveDownload() {
