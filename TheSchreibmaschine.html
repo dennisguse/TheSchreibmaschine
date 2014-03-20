@@ -81,6 +81,9 @@
                 playSound();
                 
                 switch (event.keyCode) {
+                case 8: //Handle backspace (for Webbrowser Opera).
+                    return false;
+                    break;
                 case 13: //Add new paragraph
                     newParagraph();
                     break;
