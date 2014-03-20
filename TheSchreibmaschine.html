@@ -299,15 +299,12 @@
                 backspace();
             }
             
-            function newParagraph(autoLine) {
+            function newParagraph() {
                 console.log("New paragraph");
                 var cursor = $("#cursor")[0];
                 var currentParagraph = $("#currentParagraph")[0];
 
                 var newParagraph = document.createElement("div");
-                if (autoLine !== undefined) {
-                    newParagraph.autoLine = true;
-                }
 
                 currentParagraph.parentNode.insertBefore(newParagraph, currentParagraph.nextElementSibling); //Insert paragraph
 
