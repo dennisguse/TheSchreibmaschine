@@ -234,9 +234,12 @@
             + If character is a string, a new textNode is created, otherwise not.
             */
             function write(character) {
-                var cursor = $("#cursor")[0];
-                //console.log("writing " + character);
+                if (!(typeof character == 'string' || character instanceof String)) {
+                    console.log("Warning can only write strings")
+                }
 
+                var cursor = $("#cursor")[0];
+                
                 if (character == "\n") {
                     newParagraph();
                     return;
@@ -244,16 +247,14 @@
                 
                 var currentParagraph = $("#currentParagraph")[0];
                 var currentParagraphOldHeight = currentParagraph.offsetHeight;
-                
-                if (typeof character == 'string' || character instanceof String) { //TODO If string is longer, need to split
-                    var toAdd = document.createTextNode(character);
-                } else toAdd = character;
 
-                currentParagraph.insertBefore(toAdd, cursor);
-                
-                //TODO This removes all unnecessary textNodes by merging them. Should be avoided by rewriting this method.
-                currentParagraph.normalize();
-                
+                if (cursor.previousSibling !== null && cursor.previousSibling.nodeType ==  3) {
+                    cursor.previousSibling.appendData(character);                    
+                } else {
+                    var toAdd = document.createTextNode(character);
+                    currentParagraph.insertBefore(toAdd, cursor);
+                }
+                                
                 if (currentParagraphOldHeight != currentParagraph.offsetHeight) centerCurrentParagraph();
             }
 
