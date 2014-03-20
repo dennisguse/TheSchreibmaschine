@@ -283,7 +283,7 @@
                     return;
                 }
                 if (cursor.previousSibling.nodeType ==  3 && cursor.previousSibling.length > 1) { //Is a text node and must be splitted into two; the cursor is inserted between.
-                    cursor.previousSibling.deleteData(cursor.previousSibling.length-1, cursor.previousSibling.length);
+                    cursor.previousSibling.deleteData(cursor.previousSibling.length-1, 1);
                     
                     cursor.parentElement.normalize(); //Merge textNodes that might be introduced.
                     return;
