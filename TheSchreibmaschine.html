@@ -355,7 +355,7 @@
 		
     		function saveDownload() {
                 var textFileAsBlob = new Blob([getText()], {type:'text/plain'});
-	            var fileNameToSaveAs = "editor.txt";
+	            var fileNameToSaveAs = "TheSchreibmaschine.txt";
 
             	var downloadLink = document.createElement("a");
             	downloadLink.download = fileNameToSaveAs;
@@ -378,8 +378,13 @@
 
             function loadDrop(event) {
                 loadAllowDrop(event);
-                console.log("Load file");
-
+                
+                if (event.dataTransfer.getData("TheSchreibmaschine") !== "") { //By standard "" means nothing there, i.e. undefined.
+                    console.log("LoadDrop: Drops from myself are not allowed; there is no copy and paste here.")
+                    return;
+                }
+                
+                console.log("LoadDrop: we are loading now.");
                 if (event.dataTransfer.types.indexOf("text/plain") >= 0) {
                     var content = event.dataTransfer.getData("text/plain");
                     console.log(content);
