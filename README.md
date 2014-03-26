@@ -15,7 +15,7 @@ You can either use the hidden features or simply save the TheSchreibmaschine-Web
 -----
 Features:
 * Your text only.
-* Cursor remains centered.
+* Your current paragraph remains centered.
 * There is no text selection.
 * There is no CTRL-Z.
 * There is only keyboard control.
@@ -25,6 +25,7 @@ Hidden Features:
 * Allows drag and drop for loading and saving.
 * Download of current text is triggered on double click.
 * Use in fullscreen mode (press F11).
+* CTRL-DEL and CTRL-BACKSPACE
 
 * ALT-A: toggle text alignment (left vs. center).
 * ALT-W: toggle page width (40% or 80% of full window).

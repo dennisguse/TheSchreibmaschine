@@ -275,8 +275,8 @@
                 if (currentParagraphOldHeight != currentParagraph.offsetHeight) centerCurrentParagraph();
             }
 
-            function backspace() {
-                console.log("Backspace");
+            function backspace(ctrl) {
+                console.log("BACKSPACE");
                 var cursor = $("#cursor")[0];
                 var currentParagraph = $("#currentParagraph")[0];
 
@@ -288,7 +288,7 @@
 
                         var toAppend = currentParagraph.childNodes.length;
                         for(var i = 0; i < toAppend; i++) {
-                            write(currentParagraph.removeChild(currentParagraph.firstChild));
+                            previousLine.insertBefore(currentParagraph.childNodes[i], null);
                         }
 
                         currentParagraph.remove(); //Now remove the line.
@@ -303,18 +303,64 @@
                 if (cursor.previousSibling.nodeType ==  3) {
                     if (cursor.previousSibling.length == 1) { //Is a text node and must not be splitted.
                         cursor.previousSibling.remove();
-                    } else  { //Is a text node and must be splitted into two; the cursor is inserted between.
-                        cursor.previousSibling.deleteData(cursor.previousSibling.length-1, 1);
+                    } else  { //Just delete before the cursor.
+                        var toDeleteIndex = cursor.previousSibling.length-1;
+                        
+                        if (ctrl) { //Delete previous word?
+                             var previousWordStartIndex = cursor.previousSibling.data.search(/\w+$/);
+                             toDeleteIndex = (previousWordStartIndex != -1) ? previousWordStartIndex : toDeleteIndex;
+                        }
+                        
+                        cursor.previousSibling.deleteData(toDeleteIndex, cursor.previousSibling.length - toDeleteIndex);
                     }
+                } else {
+                    console.log("Error: Encountered a non-text node.");
                 }
                 
                 if (currentParagraphOldHeight != currentParagraph.offsetHeight) centerCurrentParagraph();
             }
             
-            function del() {
+            function del(ctrl) {
                 console.log("DEL");
-                moveCursorRight(); //TODO Check if cursor has moved, if not then do not apply backspace()!
-                backspace();
+                var currentParagraph = $("#currentParagraph")[0];
+
+                //Line delete.
+                if (cursor.nextSibling === null) { //Remove line and append to previous
+                    var nextLine = currentParagraph.nextElementSibling;
+                    if (nextLine != null) {
+
+                        var toAppend = nextLine.childNodes.length;
+                        for(var i = 0; i < toAppend; i++) {
+                            currentParagraph.insertBefore(nextLine.childNodes[i], null)
+                        }
+
+                        nextLine.remove(); //Now remove the line.
+                    }
+                    
+                    centerCurrentParagraph();
+                    return;
+                }
+                
+                var currentParagraphOldHeight = currentParagraph.offsetHeight;
+                //Normal delete
+                if (cursor.nextSibling.nodeType ==  3) {
+                    if (cursor.nextSibling.length == 1) { //Is a text node and must not be splitted.
+                        cursor.nextSibling.remove();
+                    } else  { //Just delete before the cursor.
+                        var toDeleteIndex = 1;
+                        
+                        if (ctrl) { //Delete next word?
+                             var nextWordEndIndex = cursor.nextSibling.data.search(/\w+$/); //TODO Adapt!
+                             toDeleteIndex = (nextWordEndIndex != -1) ? nextWordEndIndex : toDeleteIndex;
+                        }
+                        
+                        cursor.nextSibling.deleteData(0, toDeleteIndex);
+                    }
+                } else {
+                    console.log("Error: Encountered a non-text node.");
+                }
+                
+                if (currentParagraphOldHeight != currentParagraph.offsetHeight) centerCurrentParagraph();
             }
             
             function newParagraph() {
