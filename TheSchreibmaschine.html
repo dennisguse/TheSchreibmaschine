@@ -334,12 +334,14 @@
             These functions overwrite the styles set by the css class #editor by setting the intended property directly at the editor element. The original value of the CSS definition cannot be accessed and thus the initial value must be guessed. Please make sure to be failsafe here.
             */
             function toggleTextAlignment() {
+                console.log("Changing text alignment");
                 if ($("#editor")[0].style.textAlign === "left") 
                     $("#editor")[0].style.textAlign = "center";
                 else $("#editor")[0].style.textAlign = "left";
             }
             
             function togglePageWidth() {
+                console.log("Changing page width");
                 if ($("#page")[0].style.width === "40%") 
                     $("#page")[0].style.width = "80%";
                 else $("#page")[0].style.width = "40%";
@@ -347,9 +349,10 @@
             }
 
             function toggleBackgroundColor() {
-                if ($("#editor")[0].style.backgroundColor === "white")
-                    $("#editor")[0].style.backgroundColor = "whitesmoke";
-                else $("#editor")[0].style.backgroundColor = "white";
+                console.log("Change background color");
+                if ($("#editor")[0].style.backgroundColor === "rgb(245, 245, 245)") //"whitesmoke" is replaced by color code.
+                    $("#editor")[0].style.backgroundColor = "white";
+                else $("#editor")[0].style.backgroundColor = "whitesmoke";
             }
             
         </script>
@@ -443,8 +446,10 @@
             -webkit-box-align: center;
             text-align: center;
 
+
             overflow: hidden;
-            
+
+            background-color: white;            
             font-family: "courier";
 
             -webkit-touch-callout: none;
