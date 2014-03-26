@@ -138,7 +138,7 @@
             function moveCursorLeft() {
                 var cursor = $("#cursor")[0];
                 if (cursor.previousSibling == null) { //goto end of previous line
-                    moveCursorUp(); //TODO Add current index: end of line
+                    moveCursorUp();
                     return;
                 }
                 if (cursor.previousSibling.nodeType ==  3 && cursor.previousSibling.length == 1) { //Is a text node and must not be splitted.
@@ -160,7 +160,7 @@
             function moveCursorRight() {
                 var cursor = $("#cursor")[0];
                 if (cursor.nextSibling == null) { //goto beginning of next line
-                    moveCursorDown(); //TODO Add current index
+                    moveCursorDown();
                     return;
                 }
                 if (cursor.nextSibling.nodeType ==  3 && cursor.nextSibling.length == 1) { //Is a text node and must not be splitted.
@@ -432,7 +432,7 @@
         <script type="text/javascript">
             /**
             Load data from a file or clipboard.
-            TODO: No error check done.
+            No error check is done.
             */            
             function loadAllowDrop(event) {
                 //console.log("Allow drop");
