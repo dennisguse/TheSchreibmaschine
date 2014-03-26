@@ -350,8 +350,10 @@
                         var toDeleteIndex = 1;
                         
                         if (ctrl) { //Delete next word?
-                             var nextWordEndIndex = cursor.nextSibling.data.search(/\w+$/); //TODO Adapt!
-                             toDeleteIndex = (nextWordEndIndex != -1) ? nextWordEndIndex : toDeleteIndex;
+                            var match = cursor.nextSibling.data.match(/\w+\b/);
+                            if (match !== null && match[0] !== undefined) {
+                                if (match.index == 0) toDeleteIndex = match[0].length;
+                            }
                         }
                         
                         cursor.nextSibling.deleteData(0, toDeleteIndex);
@@ -566,7 +568,7 @@
     draggable="true" ondragstart="saveDrag(event)">
         <div id="editor" ondrop="loadDrop(event)" ondragover="loadAllowDrop(event)">
             <div id="page">
-                <div id="currentParagraph"><div id="cursor">&nbsp;</div></div>
+                <div id="currentParagraph">ASD ASD ASD<div id="cursor">&nbsp;</div></div>
             </div>
         </div>
     </body>
