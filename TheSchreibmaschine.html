@@ -420,7 +420,7 @@
 		
     		function saveDownload() {
                 var textFileAsBlob = new Blob([getText()], {type:'text/plain'});
-	            var fileNameToSaveAs = "TheSchreibmaschine.txt";
+	            var fileNameToSaveAs = "TheSchreibmaschine - " + new Date().toJSON() + ".txt";
 
             	var downloadLink = document.createElement("a");
             	downloadLink.download = fileNameToSaveAs;
