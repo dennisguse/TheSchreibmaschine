@@ -2,9 +2,11 @@
 
 TheSchreibmaschine.
 
-Offers nothing else than writing and paragraph highlightning.
-It is ment to be for paragraph writting, so just write your current paragraph and then press enter.
-The cursor will stay centered.
+Offers nothing else than writing.
+It is meant to be for paragraph writting, so just write your current paragraph and then press enter.
+Your current paragraph (the one with the cursor) is highlighted over the rest of your text.
+
+The current paragraph will stay centered.
 
 TheSchreibmaschine does not save or upload anything.
 If you close the tab/browser your text is gone!
@@ -30,7 +32,7 @@ Hidden Features:
 * Use your browser's support for zooming in/out to change the font size.
 
 -----
-Limitations:
+Known Limitations:
 * At the moment ONLY tested in Google Chrome and Epiphany.
 * Does not work in Firefox (at least not on Ubuntu 13.10), because textNode.splitText() does not update the length correctly.
 
@@ -65,13 +67,8 @@ The following events are captured:
 
 All animations and visual things are done in CSS:
 * cursor
-* currentParagph
-* editor 
+* currentParagraph
+* editor
 * page
 
-
 Uses JQuery. Thanks.
------
-TODO:
-* CTRL-Z?
-* Don't use node.normalize().
