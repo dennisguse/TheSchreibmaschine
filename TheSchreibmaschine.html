@@ -44,7 +44,7 @@
                     break;
                 case 37:
                     playSound();
-                    moveCursorLeft();
+                    moveCursorLeft(event.ctrlKey);
                     break;
                 case 38:
                     playSound();
@@ -52,7 +52,7 @@
                     break;
                 case 39:
                     playSound();
-                    moveCursorRight();
+                    moveCursorRight(event.ctrlKey);
                     break;
                 case 40:
                     playSound();
@@ -154,7 +154,7 @@
                     setCurrentParagraph(newLine);
                 }
             }
-            function moveCursorLeft() {
+            function moveCursorLeft(ctrl) {
                 var cursor = $("#cursor")[0];
                 if (cursor.previousSibling == null) { //goto end of previous line
                     moveCursorUp();
@@ -168,7 +168,12 @@
                 }
                 if (cursor.previousSibling.nodeType ==  3 && cursor.previousSibling.length > 1) { //Is a text node and must be splitted into two; the cursor is inserted between.
                     var textNodeBefore = cursor.previousSibling;
-                    var textNodeAfter = textNodeBefore.splitText(textNodeBefore.length - 1);
+
+                    var splitIdx = -1; //CTRL-Handling (one word to the left).
+                    if (ctrl) splitIdx = wordLastEndIndex(textNodeBefore.data);
+                    if (splitIdx == -1) splitIdx = textNodeBefore.length - 1;
+                    
+                    var textNodeAfter = textNodeBefore.splitText(splitIdx);
                     
                     cursor.parentElement.insertBefore(cursor, textNodeAfter);
                     
@@ -176,7 +181,7 @@
                     return;
                 }
             }
-            function moveCursorRight() {
+            function moveCursorRight(ctrl) {
                 var cursor = $("#cursor")[0];
                 if (cursor.nextSibling == null) { //goto beginning of next line
                     moveCursorDown();
@@ -190,7 +195,13 @@
                 }
                 if (cursor.nextSibling.nodeType ==  3 && cursor.nextSibling.length > 1) { //Is a text node and must be splitted into two; the cursor is inserted between.
                     var textNodeBefore = cursor.nextSibling;
-                    var textNodeAfter = textNodeBefore.splitText(1);
+
+                    var splitIdx = -1; //CTRL-Handling (one word to the right).
+                    if (ctrl) splitIdx = wordFirstStartIndex(textNodeBefore.data);
+                    if (splitIdx == -1) splitIdx = 1;
+
+
+                    var textNodeAfter = textNodeBefore.splitText(splitIdx);
                     
                     cursor.parentElement.insertBefore(cursor, textNodeAfter);
                     
@@ -585,10 +596,11 @@
     draggable="true" ondragstart="saveDrag(event)">
         <div id="editor" ondrop="loadDrop(event)" ondragover="loadAllowDrop(event)">
             <div id="page">
-                <div id="currentParagraph"><div id="cursor">&nbsp;</div></div>
+                <div id="currentParagraph">This is a hello to the world<div id="cursor">&nbsp;</div></div>
             </div>
         </div>
     </body>
+    <>
     <audio id="audioType" hidden="hidden">
         <source src="audio/type.ogg" type="audio/ogg">
         <source src="audio/type.mp3" type="audio/mpeg">
