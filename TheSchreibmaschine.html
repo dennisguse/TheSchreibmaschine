@@ -62,6 +62,7 @@
                 case 8:
                     playSound();
                     backspace(event.ctrlKey);
+					event.stopPropagation(); //for Webbrowser Opera (prevent back navigation)
                     break;
                 case 46:
                     playSound();
@@ -95,7 +96,7 @@
                 playSound();
                 
                 switch (event.keyCode) {
-                case 8: //Handle backspace (for Webbrowser Opera).
+                case 8: //for Webbrowser Opera (prevent back navigation)
                     return false;
                     break;
                 case 13: //Add new paragraph
