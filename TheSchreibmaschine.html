@@ -399,9 +399,9 @@
             */
             function toggleTextAlignment() {
                 console.log("Changing text alignment");
-                if ($("#editor")[0].style.textAlign === "left") 
-                    $("#editor")[0].style.textAlign = "center";
-                else $("#editor")[0].style.textAlign = "left";
+                if ($("#editor")[0].style.textAlign === "center") 
+                    $("#editor")[0].style.textAlign = "left";
+                else $("#editor")[0].style.textAlign = "center";
             }
             
             function togglePageWidth() {
@@ -508,7 +508,7 @@
             -webkit-box-orient: vertical;
             -webkit-box-pack: center;
             -webkit-box-align: center;
-            text-align: center;
+            /*text-align: center;*/
 
 
             overflow: hidden;
