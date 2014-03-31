@@ -76,19 +76,19 @@
                 case 65: //Toggle text alignment (ALT+A)
                     if (event.altKey) {
                         toggleTextAlignment();
-                        event.stopPropagation();
+                        event.preventDefault();
                     }
                     break;
                 case 87: //Toggle page width (ALT+W)
                     if (event.altKey) {
                         togglePageWidth();
-                        event.stopPropagation();
+                        event.preventDefault();
                     }
                     break;
                 case 67: //Toggle color (ALT+C)
                     if (event.altKey) {
                         toggleBackgroundColor();
-                        event.stopPropagation();
+                        event.preventDefault();
                     }
                     break;
                 }
