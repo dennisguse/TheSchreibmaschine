@@ -447,6 +447,22 @@
         </script>
         <script type="text/javascript">
             /**
+            Support CTRL-V, e.g. pasting from clipboard (works in Chrome and probably IE).
+            */
+            document.onpaste = function(event) {
+                console.log("CTRL-V: Handle paste from clipboard");
+                console.log(event);
+                if (event.clipboardData.types.indexOf("text/plain") >= 0) {
+                    var content = event.clipboardData.getData("text/plain")
+                    for (var i=0; i < content.length; i++) {
+                        write(content[i]);
+                        console.log(i);
+                    }
+                }
+            }
+
+
+            /**
             Load data from a file or clipboard.
             No error check is done.
             */            
