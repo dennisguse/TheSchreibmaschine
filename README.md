@@ -26,6 +26,7 @@ Hidden Features:
 * Download of current text is triggered on double click.
 * Use in fullscreen mode (press F11).
 * CTRL-DEL and CTRL-BACKSPACE
+* CTRL-V (pasting from clipboard) is working in Chrome and IE.
 
 * ALT-A: toggle text alignment (left vs. center).
 * ALT-W: toggle page width (40% or 80% of full window).
