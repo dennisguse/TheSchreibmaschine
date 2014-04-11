@@ -577,7 +577,8 @@
         }
 
         div {
-            word-wrap: break-word;
+            word-wrap:break-word;
+            word-break:break-all; /*Required so longer text stays in line with cursor and does not break into new line.*/
             -webkit-hyphens: auto;
             -moz-hyphens: auto;
             hyphens: auto;
@@ -605,7 +606,7 @@
     draggable="true" ondragstart="saveDrag(event)">
         <div id="editor" ondrop="loadDrop(event)" ondragover="loadAllowDrop(event)">
             <div id="page">
-                <div id="currentParagraph">This is a hello to the world<div id="cursor">&nbsp;</div></div>
+                <div id="currentParagraph">This is a hello to the world<div id="cursor"></div></div>
             </div>
         </div>
     </body>
