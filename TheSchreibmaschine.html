@@ -432,6 +432,7 @@
     		    console.log("Drag start");
     			event.dataTransfer.setData("text", getText());
     			event.dataTransfer.setData("TheSchreibmaschine", "YES");
+                event.dataTransfer.setDragImage(document.getElementById("dragPreview"), 0, 0);
     	    }
 		
     		function saveDownload() {
@@ -616,4 +617,5 @@
         <source src="audio/type.opus" type="audio/opus">
         <source src="audio/type.wav" type="audio/wav">
     </audio>
+    <img id="dragPreview" />
 </html>
