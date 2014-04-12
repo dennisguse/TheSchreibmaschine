@@ -388,6 +388,10 @@
 
                 var newParagraph = document.createElement("div");
 
+                if (cursor.nextSibling !== null) { //Need to move existing content to new line.
+                    newParagraph.appendChild(cursor.nextSibling);
+                }
+
                 currentParagraph.parentNode.insertBefore(newParagraph, currentParagraph.nextElementSibling); //Insert paragraph
 
                 moveCursorDown();
@@ -531,11 +535,11 @@
             -webkit-box-align: center;
             /*text-align: center;*/
 
-
             overflow: hidden;
 
             background-color: white;            
             font-family: "courier";
+            text-rendering: optimizeLegibility;
 
             -webkit-touch-callout: none;
             -webkit-user-select: none;
@@ -555,7 +559,6 @@
             -moz-transition: top 0.3s;
             -o-transition: top 0.3s;
             transition: top 0.3s;
- 
         }
 
         #page > div {
@@ -563,7 +566,6 @@
             min-height: 1.1em; 
             
             -padding-top: 1em;
-            
             
             -webkit-transition: all 0.3s linear;
             -moz-transition: all 0.3s linear;
