@@ -24,6 +24,7 @@
                 switch (event.keyCode) {
                 //Navigation
                 case 33: //Page-Up
+                    playSound();
                     moveCursorUp();
                     moveCursorUp();
                     moveCursorUp();
@@ -31,6 +32,7 @@
                     moveCursorUp();
                     break;
                 case 34: //Page-Down
+                    playSound();
                     moveCursorDown();
                     moveCursorDown();
                     moveCursorDown();
@@ -529,10 +531,10 @@
             position:fixed;
             width:100%;
             height:100%;
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            -webkit-box-pack: center;
-            -webkit-box-align: center;
+            display: box;
+            box-orient: vertical;
+            box-pack: center;
+            box-align: center;
             /*text-align: center;*/
 
             overflow: hidden;
@@ -541,11 +543,11 @@
             font-family: "courier";
             text-rendering: optimizeLegibility;
 
-            -webkit-touch-callout: none;
+            /*-webkit-touch-callout: none; Not yet required, there is no such thing as touchscreen support here.*/
             -webkit-user-select: none;
-            -khtml-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
+            -o-user-select: none;
             user-select: none;
         }
 
@@ -557,6 +559,7 @@
             width : 80%;
             -webkit-transition: top 0.3s;
             -moz-transition: top 0.3s;
+            -ms-transition: top 0.3s;
             -o-transition: top 0.3s;
             transition: top 0.3s;
         }
@@ -569,6 +572,7 @@
             
             -webkit-transition: all 0.3s linear;
             -moz-transition: all 0.3s linear;
+            -ms-transition: all 0.3s linear;
             -o-transition: all 0.3s linear;
             transition: all 0.3s linear;
         }
@@ -584,6 +588,8 @@
             word-break:break-all; /*Required so longer text stays in line with cursor and does not break into new line.*/
             -webkit-hyphens: auto;
             -moz-hyphens: auto;
+            -ms-hyphens: auto;
+            -o-hyphens: auto;
             hyphens: auto;
         }
         
@@ -594,10 +600,35 @@
             width:0.1em;
             -webkit-animation: blink 3s infinite;
             -moz-animation: blink 3s infinite;
+            -ms-animation: blink 3s infinite;
             -o-animation: blink 3s infinite;
             animation: blink 3s infinite;
         }
         @-webkit-keyframes blink {
+            0% {opacity: 1;}
+            40% {opacity: 1;}
+            70% {opacity: 0.2;}
+            100% {opacity: 1;}
+        }
+        @-moz-keyframes blink {
+            0% {opacity: 1;}
+            40% {opacity: 1;}
+            70% {opacity: 0.2;}
+            100% {opacity: 1;}
+        }
+        @-ms-keyframes blink {
+            0% {opacity: 1;}
+            40% {opacity: 1;}
+            70% {opacity: 0.2;}
+            100% {opacity: 1;}
+        }
+        @-o-keyframes blink {
+            0% {opacity: 1;}
+            40% {opacity: 1;}
+            70% {opacity: 0.2;}
+            100% {opacity: 1;}
+        }
+        @keyframes blink {
             0% {opacity: 1;}
             40% {opacity: 1;}
             70% {opacity: 0.2;}
