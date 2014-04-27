@@ -24,7 +24,7 @@
                 switch (event.keyCode) {
                 //Navigation
                 case 33: //Page-Up
-                    playSound();
+                    soundTypewriter();
                     moveCursorUp();
                     moveCursorUp();
                     moveCursorUp();
@@ -32,7 +32,7 @@
                     moveCursorUp();
                     break;
                 case 34: //Page-Down
-                    playSound();
+                    soundTypewriter();
                     moveCursorDown();
                     moveCursorDown();
                     moveCursorDown();
@@ -40,39 +40,39 @@
                     moveCursorDown();                
                     break;
                 case 35:
-                    playSound();
+                    soundTypewriter();
                     moveCursorEND();
                     break;
                 case 36:
-                    playSound();
+                    soundTypewriter();
                     moveCursorPOS1();
                     break;
                 case 37:
-                    playSound();
+                    soundTypewriter();
                     moveCursorLeft(event.ctrlKey);
                     break;
                 case 38:
-                    playSound();
+                    soundTypewriter();
                     moveCursorUp();
                     break;
                 case 39:
-                    playSound();
+                    soundTypewriter();
                     moveCursorRight(event.ctrlKey);
                     break;
                 case 40:
-                    playSound();
+                    soundTypewriter();
                     moveCursorDown();
                     break;
                 //Remove: DEL and STRG+DEL
                 case 8:
-                    playSound();
+                    soundTypewriter();
                     backspace(event.ctrlKey);
                     
                     event.preventDefault();
 					event.stopPropagation(); //for Webbrowser Opera (prevent back navigation)
                     break;
                 case 46:
-                    playSound();
+                    soundTypewriter();
                     del(event.ctrlKey);
                     break;
                 
@@ -95,9 +95,9 @@
                         event.preventDefault();
                     }
                     break;
-                case 83://Toggle playSound()-volume (ALT+S)
+                case 83://Toggle typewriter-volume (ALT+S)
                     if (event.altKey) {
-                        togglePlaySoundVolume();
+                        toggleTypewriterVolume();
                         event.preventDefault();
                     }
                     break;
@@ -106,7 +106,7 @@
             
             document.onkeypress = function(event) {
                 //console.log(event);
-                playSound();
+                soundTypewriter();
                 
                 switch (event.keyCode) {
                 case 8: //for Webbrowser Opera (prevent back navigation)
@@ -124,10 +124,10 @@
                 }
             }
             
-            function playSound() {
-                var audioType = document.getElementById("audioType");
-                var sound = audioType.cloneNode(true);
-                sound.volume = audioType.volume; //cloneNode and setAttribute() do not copy this property (modified via javascript).
+            function soundTypewriter() {
+                var audioTypewriter = document.getElementById("audioTypewriter");
+                var sound = audioTypewriter.cloneNode(true);
+                sound.volume = audioTypewriter.volume; //cloneNode and setAttribute() do not copy this property (modified via javascript).
                 sound.play();
             }
             
@@ -436,10 +436,10 @@
                 else $("#editor")[0].style.backgroundColor = "whitesmoke";
             }
             
-            function togglePlaySoundVolume() {
+            function toggleTypewriterVolume() {
                 console.log("Changing typing volume");
-                var audioType = document.getElementById("audioType");
-                audioType.volume = audioType.volume === 1 ? 0 : 1;
+                var audioTypewriter = document.getElementById("audioTypewriter");
+                audioTypewriter.volume = audioTypewriter.volume === 1 ? 0 : 1;
             }
         </script>
         <script type="text/javascript">
@@ -662,7 +662,7 @@
             </div>
         </div>
     </body>
-    <audio id="audioType" hidden="hidden">
+    <audio id="audioTypewriter" hidden="hidden">
         <source src="audio/type.ogg" type="audio/ogg">
         <source src="audio/type.mp3" type="audio/mpeg">
         <source src="audio/type.opus" type="audio/opus">
