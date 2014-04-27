@@ -480,7 +480,7 @@
             */
             document.onpaste = function(event) {
                 console.log("CTRL-V: Handle paste from clipboard");
-                console.log(event);
+                    
                 if (event.clipboardData.types.indexOf("text/plain") >= 0) {
                     var content = event.clipboardData.getData("text/plain")
                     for (var i=0; i < content.length; i++) {
@@ -489,9 +489,10 @@
                     }
                 }
             }
-            
-            document.onpaste = function(event) {
+            document.oncopy = function(event) {
                 console.log("CTRL-C: Handle copy to clipboard")
+                event.preventDefault();
+                event.clipboardData.setData("text/plain", getText());
             }
 
 
