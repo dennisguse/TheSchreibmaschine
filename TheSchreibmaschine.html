@@ -67,6 +67,8 @@
                 case 8:
                     playSound();
                     backspace(event.ctrlKey);
+                    
+                    event.preventDefault();
 					event.stopPropagation(); //for Webbrowser Opera (prevent back navigation)
                     break;
                 case 46:
@@ -493,7 +495,9 @@
                 }
                 
                 console.log("LoadDrop: we are loading now.");
-                if (event.dataTransfer.types.indexOf("text/plain") >= 0) {
+                
+                var typeSearchFuntion = event.dataTransfer.types.indexOf ? event.dataTransfer.types.indexOf :event.dataTransfer.types.contains; //Compatibility fix for Firefox. Argghhh!!!!!!!1
+                if (typeSearchFuntion("text/plain") >= 0) {
                     var content = event.dataTransfer.getData("text/plain");
                     console.log(content);
                     for(var i=0; i < content.length; i++) {
@@ -501,7 +505,7 @@
                     }
                     return; //Handle only PLAIN or FILES!
                 }
-                if (event.dataTransfer.types.indexOf("Files") >= 0) {
+                if (typeSearchFuntion("Files") >= 0) {
                     var files = event.dataTransfer.files;
                     //Check how multiple files are handled.
                     for (var i = 0; i < files.length; i++) {
