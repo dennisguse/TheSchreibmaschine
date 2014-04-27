@@ -95,6 +95,12 @@
                         event.preventDefault();
                     }
                     break;
+                case 83://Toggle playSound()-volume (ALT+S)
+                    if (event.altKey) {
+                        togglePlaySoundVolume();
+                        event.preventDefault();
+                    }
+                    break;
                 }
             }
             
@@ -119,7 +125,10 @@
             }
             
             function playSound() {
-                $("#audioType")[0].cloneNode(true).play();
+                var audioType = document.getElementById("audioType");
+                var sound = audioType.cloneNode(true);
+                sound.volume = audioType.volume; //cloneNode and setAttribute() do not copy this property (modified via javascript).
+                sound.play();
             }
             
             /*
@@ -421,12 +430,17 @@
             }
 
             function toggleBackgroundColor() {
-                console.log("Change background color");
+                console.log("Changing background color");
                 if ($("#editor")[0].style.backgroundColor === "rgb(245, 245, 245)") //"whitesmoke" is replaced by color code.
                     $("#editor")[0].style.backgroundColor = "white";
                 else $("#editor")[0].style.backgroundColor = "whitesmoke";
             }
             
+            function togglePlaySoundVolume() {
+                console.log("Changing typing volume");
+                var audioType = document.getElementById("audioType");
+                audioType.volume = audioType.volume === 1 ? 0 : 1;
+            }
         </script>
         <script type="text/javascript">
             /**
