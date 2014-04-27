@@ -16,7 +16,6 @@
         <link rel="icon" type="image/gif" href="./graphics/logo.gif"/>
         <link rel="icon" type="image/svg+xml" href="./graphics/logo_animated.svg"/>
                 
-        <script src="jquery-2.0.3.js"></script>
         <script type="text/javascript">
             var last = 0;
             document.onkeydown = function(event) {
@@ -153,7 +152,7 @@
             Navigation - in a line.
             */
             function moveCursorUp() {
-                var cursor = $("#cursor")[0];
+                var cursor = document.getElementById("cursor");
                 
                 var newLine = cursor.parentElement.previousElementSibling;
                 if (newLine !== null) {
@@ -162,7 +161,7 @@
                 }
             }            
             function moveCursorDown() {
-                var cursor = $("#cursor")[0];
+                var cursor = document.getElementById("cursor");
 
                 var newLine = cursor.parentElement.nextElementSibling;
                 if (newLine !== null) {
@@ -171,7 +170,7 @@
                 }
             }
             function moveCursorLeft(ctrl) {
-                var cursor = $("#cursor")[0];
+                var cursor = document.getElementById("cursor");
                 if (cursor.previousSibling === null) { //goto end of previous line
                     moveCursorUp();
                     return;
@@ -198,7 +197,7 @@
                 }
             }
             function moveCursorRight(ctrl) {
-                var cursor = $("#cursor")[0];
+                var cursor = document.getElementById("cursor");
                 if (cursor.nextSibling == null) { //goto beginning of next line
                     moveCursorDown();
                     return;
@@ -227,11 +226,11 @@
             }
                     
             function moveCursorPOS1() {
-                var cursor = $("#cursor")[0];
+                var cursor = document.getElementById("cursor");
                 currentParagraph.insertBefore(cursor, currentParagraph.childNodes[0]);
             } 
             function moveCursorEND() {
-                var cursor = $("#cursor")[0];
+                var cursor = document.getElementById("cursor");
                 currentParagraph.appendChild(cursor);
             } 
              
@@ -240,38 +239,46 @@
             Currentline positioning and highlightening.
             */
             window.onresize = function(event) {
-                setCurrentParagraph($("#currentParagraph")[0]);
+                setCurrentParagraph(document.getElementById("currentParagraph"));
             };
             function setCurrentParagraph(newCurrentParagraph) {
                 //Update id=currentParagraph
-                var oldCurrentParagraph = $("#currentParagraph")[0]; 
+                var oldCurrentParagraph = document.getElementById("currentParagraph"); 
                 if (oldCurrentParagraph !== undefined && newCurrentParagraph !== oldCurrentParagraph) {
                     oldCurrentParagraph.removeAttribute("id");
                     oldCurrentParagraph.className = "";
                 }
                 newCurrentParagraph.id = "currentParagraph";
                 newCurrentParagraph.className = "currentParagraph";
-                //Compute offsetHeight
+
                 centerCurrentParagraph(newCurrentParagraph);
             }
             function centerCurrentParagraph(newCurrentParagraph) {
-                //Old school: centers current paragraph
-                /*newCurrentParagraph = newCurrentParagraph || $("#currentParagraph")[0];
-                currentParagraphIndex = [].indexOf.call(newCurrentParagraph.parentNode.children, newCurrentParagraph);
-                    
+                //Old school I: centers current paragraph
+                /*
+                var cursor = document.getElementById("cursor");
+                
+                var newCurrentParagraph = newCurrentParagraph || document.getElementById("currentParagraph");
+                var currentParagraphIndex = [].indexOf.call(newCurrentParagraph.parentNode.children, newCurrentParagraph);
+                
                 var lineHeight = 0;
                 for(var idx=0; idx < currentParagraphIndex; idx++) {
                      lineHeight += page.children[idx].offsetHeight;
                 }
                 lineHeight += currentParagraph.offsetHeight / 2;
-                    
-                centeringOffset = (window.innerHeight / 2) - lineHeight;
-                //console.log("DEBUG:setCurrentParagraph: " + lineHeight + " " + centeringOffset);*/
+                  
+                var centeringOffset = (window.innerHeight / 2) - lineHeight;
+                //console.log("DEBUG:setCurrentParagraph: " + lineHeight + " " + centeringOffset);
+                */                                
                 
-                //New school: center cursor
+                //Old school II: center's cursor (using jquery)
+                /*
                 var cursor = $("#cursor");
                 var centeringOffset = (window.innerHeight / 2) - cursor.position().top - cursor[0].offsetHeight;
-                
+                */
+
+                //New school: Just center the cursor.
+                var centeringOffset = (window.innerHeight / 2) - cursor.offsetTop;
                 page.style.top = centeringOffset + "px";
             }
 
@@ -286,14 +293,14 @@
                     console.log("Warning can only write strings")
                 }
 
-                var cursor = $("#cursor")[0];
+                var cursor = document.getElementById("cursor");
                 
                 if (character == "\n") {
                     newParagraph();
                     return;
                 }
                 
-                var currentParagraph = $("#currentParagraph")[0];
+                var currentParagraph = document.getElementById("currentParagraph");
                 var currentParagraphOldHeight = currentParagraph.offsetHeight;
 
                 if (cursor.previousSibling !== null && cursor.previousSibling.nodeType ==  3) {
@@ -308,8 +315,8 @@
 
             function backspace(ctrl) {
                 console.log("BACKSPACE");
-                var cursor = $("#cursor")[0];
-                var currentParagraph = $("#currentParagraph")[0];
+                var cursor = document.getElementById("cursor");
+                var currentParagraph = document.getElementById("currentParagraph");
 
                 //Line delete.
                 if (cursor.previousSibling === null) { //Remove line and append to previous
@@ -353,7 +360,7 @@
             
             function del(ctrl) {
                 console.log("DEL");
-                var currentParagraph = $("#currentParagraph")[0];
+                var currentParagraph = document.getElementById("currentParagraph");
 
                 //Line delete.
                 if (cursor.nextSibling === null) { //Remove line and append to previous
@@ -396,8 +403,8 @@
             
             function newParagraph() {
                 console.log("New paragraph");
-                var cursor = $("#cursor")[0];
-                var currentParagraph = $("#currentParagraph")[0];
+                var cursor = document.getElementById("cursor");
+                var currentParagraph = document.getElementById("currentParagraph");
 
                 var newParagraph = document.createElement("div");
 
@@ -416,24 +423,23 @@
             */
             function toggleTextAlignment() {
                 console.log("Changing text alignment");
-                if ($("#editor")[0].style.textAlign === "center") 
-                    $("#editor")[0].style.textAlign = "left";
-                else $("#editor")[0].style.textAlign = "center";
+                var editor = document.getElementById("editor");
+                editor.style.textAlign = editor.style.textAlign === "center" ? "left" : "center";
             }
             
             function togglePageWidth() {
                 console.log("Changing page width");
-                if ($("#page")[0].style.width === "40%") 
-                    $("#page")[0].style.width = "80%";
-                else $("#page")[0].style.width = "40%";
+                var page = document.getElementById("page");
+                page.style.width = page.style.width === "40%" ? "80%" : "40%";
                 centerCurrentParagraph();
             }
 
             function toggleBackgroundColor() {
                 console.log("Changing background color");
-                if ($("#editor")[0].style.backgroundColor === "rgb(245, 245, 245)") //"whitesmoke" is replaced by color code.
-                    $("#editor")[0].style.backgroundColor = "white";
-                else $("#editor")[0].style.backgroundColor = "whitesmoke";
+                var editor = document.getElementById("editor");
+                if (editor.style.backgroundColor === "rgb(245, 245, 245)") //"whitesmoke" is replaced by color code.
+                    editor.style.backgroundColor = "white";
+                else editor.style.backgroundColor = "whitesmoke";
             }
             
             function toggleTypewriterVolume() {
@@ -447,7 +453,7 @@
             Save
             */
             function getText() {
-                return $("#page")[0].innerText;
+                return document.getElementById("page").innerText;
             }
             
             function saveDrag(event) { //requires body:ondragstart="saveDrag(event)"
