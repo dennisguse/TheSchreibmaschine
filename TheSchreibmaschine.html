@@ -122,7 +122,7 @@
                     break;
                 }
             }
-            
+                       
             function soundTypewriter() {
                 var audioTypewriter = document.getElementById("audioTypewriter");
                 var sound = audioTypewriter.cloneNode(true);
@@ -149,7 +149,7 @@
             }
             
             /**
-            Navigation - in a line.
+            Navigation.
             */
             function moveCursorUp() {
                 var cursor = document.getElementById("cursor");
@@ -159,7 +159,7 @@
                     newLine.appendChild(cursor);
                     setCurrentParagraph(newLine);
                 }
-            }            
+            }
             function moveCursorDown() {
                 var cursor = document.getElementById("cursor");
 
@@ -169,6 +169,7 @@
                     setCurrentParagraph(newLine);
                 }
             }
+            
             function moveCursorLeft(ctrl) {
                 var cursor = document.getElementById("cursor");
                 if (cursor.previousSibling === null) { //goto end of previous line
@@ -230,10 +231,61 @@
                 currentParagraph.insertBefore(cursor, currentParagraph.childNodes[0]);
             } 
             function moveCursorEND() {
-                var cursor = document.getElementById("cursor");
                 currentParagraph.appendChild(cursor);
-            } 
-             
+            }
+            
+            function moveCursorTo(textNode, offset) {
+                var newCurrentParagraph = textNode.parentElement;
+                console.log("Moving cursor to mouse to " + offset + " in " + newCurrentParagraph);
+
+                var cursor = document.getElementById("cursor");
+
+                var oldCurrentParagraph = cursor.parentElement;
+
+                //If hte user clicks right from the cursor, this adds an additional offset that must be stored as normalize() will remove it.
+                var additionalOffset = 0;
+                if (oldCurrentParagraph == newCurrentParagraph)
+                    if (textNode.previousElementSibling == cursor) 
+                        additionalOffset = cursor.previousSibling.length;
+
+                //Cleanup old paragraph
+                cursor.remove();
+                oldCurrentParagraph.normalize();
+    
+                //Set cursor
+                textNode = newCurrentParagraph.firstChild;
+                
+                var textNodeAfter = textNode.splitText(offset + additionalOffset);
+                if (textNodeAfter.length > 0) {
+                    newCurrentParagraph.insertBefore(cursor, textNodeAfter);
+                } else {
+                    newCurrentParagraph.appendChild(cursor);
+                }
+
+                setCurrentParagraph(newCurrentParagraph);
+            }
+              
+            /*
+            * Mouse navigation in text using selection range.
+            */
+            document.onclick = function(event) {
+                console.log("Moving cursor to mouse click");
+                
+                var textNode = null;
+                var offset = -1;
+
+                if (document.caretPositionFromPoint) {
+                    var range = document.caretPositionFromPoint(event.pageX, event.pageY);
+                    textNode = range.offsetNode;
+                    offset = range.offset;
+                } else if (document.caretRangeFromPoint) { //for webkit
+                    var range = document.caretRangeFromPoint(event.pageX, event.pageY);
+                    textNode = range.startContainer;
+                    offset = range.startOffset;
+                }
+                if (textNode.nodeType == 3) moveCursorTo(textNode, offset);
+                else console.log("...not moving cursor as click was not on textnode.");
+            }
                         
             /**
             Currentline positioning and highlightening.
@@ -674,6 +726,8 @@
         <div id="editor" ondrop="loadDrop(event)" ondragover="loadAllowDrop(event)">
             <div id="page">
                 <div id="currentParagraph">This is a hello to the world<div id="cursor"></div></div>
+                <div>huhu</div>
+                <div>Haha</div>
             </div>
         </div>
     </body>
