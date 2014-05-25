@@ -8,7 +8,7 @@
             <!-- http://www.gnu.org/licenses/gpl-3.0.txt -->
         </meta>
         <meta name="license-addition" content="Software is not allowed to be used (directly or indirectly) for military, intelligence, finance or insurance."></meta>
-        <meta name="description" content=""></meta>
+        <meta name="description" content="TheSchreibmaschine. A distraction-free (almost feature-free) keyboard text editor. Focus on what you need."></meta>
 	    <meta name="version" content="Not yet set."></meta>
 
         <meta charset="UTF-8">
@@ -328,22 +328,27 @@
 
 
             /**
-            Writing, deleting and adding new lines.
-            
-            + If character is a string, a new textNode is created, otherwise not.
+            * Writing, deleting and adding new lines.
             */
             function write(character) {
                 if (!(typeof character == 'string' || character instanceof String)) {
                     console.log("Warning can only write strings")
                 }
 
-                var cursor = document.getElementById("cursor");
                 
-                if (character == "\n") {
-                    newParagraph();
-                    return;
+                {//Handle new lines properly.
+                    var textByLines = character.split("\n");
+                    if (textByLines.length > 1) {
+                        for(i=0; i < textByLines.length; i++) {
+                            write(textByLines[i]);
+                            newParagraph();
+                        }
+                        return;
+                    }
                 }
-                
+
+                var cursor = document.getElementById("cursor");
+                                
                 var currentParagraph = document.getElementById("currentParagraph");
                 var currentParagraphOldHeight = currentParagraph.offsetHeight;
 
@@ -527,10 +532,7 @@
                     
                 if (event.clipboardData.types.indexOf("text/plain") >= 0) {
                     var content = event.clipboardData.getData("text/plain")
-                    for (var i=0; i < content.length; i++) {
-                        write(content[i]);
-                        console.log(i);
-                    }
+                    write(content);
                 }
             }
             document.oncopy = function(event) {
@@ -564,10 +566,9 @@
                 var typeSearchFuntion = event.dataTransfer.types.indexOf !== undefined ? event.dataTransfer.types.indexOf :event.dataTransfer.types.contains; //Compatibility fix for Firefox. Argghhh!!!!!!!1
                 if (typeSearchFuntion.call(event.dataTransfer.types, "text/plain") >= 0) {
                     var content = event.dataTransfer.getData("text/plain");
+                    write(content);
                     console.log(content);
-                    for(var i=0; i < content.length; i++) {
-                        write(content[i]);
-                    }
+
                     return; //Handle only PLAIN or FILES!
                 }
                 if (typeSearchFuntion.call(event.dataTransfer.types, "Files") >= 0) {
@@ -578,10 +579,8 @@
                         var reader = new FileReader();
                         reader.onload = function() {
                             content = reader.result;
-                            for(var i=0; i < content.length; i++) {
-                                write(content[i]);
-                                console.log(i);
-                            }
+                            write(content);
+                            console.log(content);
                         }
                         reader.onerror = function() {
                             console.log("Error during reading: " + reader.error);
