@@ -125,19 +125,21 @@
             
             document.onkeypress = function(event) {
                 //console.log(event);
-                soundTypewriter();
                 
                 switch (event.keyCode) {
                 case 8: //for Webbrowser Opera (prevent back navigation)
                     return false;
                     break;
                 case 13: //Add new paragraph
+                    soundTypewriter();
                     newParagraph();
                     break;
                 case 32: // Add space
+                    soundTypewriter();
                     write(" ");
                     break;
                 default: //Add text
+                    soundTypewriter();
                     write(String.fromCharCode(event.charCode));
                     break;
                 }
@@ -336,13 +338,14 @@
 
             /**
             * Writing, deleting and adding new lines.
+            *
+            * Limitation: no sequences of whitespaces are written.
             */
             function write(character) {
                 if (!(typeof character == 'string' || character instanceof String)) {
                     console.log("Warning can only write strings")
                 }
-
-                
+                        
                 {//Handle new lines properly.
                     var textByLines = character.split("\n");
                     if (textByLines.length > 1) {
@@ -360,7 +363,7 @@
                 var currentParagraphOldHeight = currentParagraph.offsetHeight;
 
                 if (cursor.previousSibling !== null && cursor.previousSibling.nodeType ==  3) {
-                    cursor.previousSibling.appendData(character);                    
+                    cursor.previousSibling.appendData(character);
                 } else {
                     var toAdd = document.createTextNode(character);
                     currentParagraph.insertBefore(toAdd, cursor);
@@ -727,7 +730,6 @@
                 <div id="currentParagraph">Feel free to be creative.<div id="cursor"></div></div>
             </div>
         </div>
-        <div>HELP</div>
     </body>
     <audio id="audioTypewriter" hidden="hidden">
         <source src="audio/type.ogg" type="audio/ogg">
