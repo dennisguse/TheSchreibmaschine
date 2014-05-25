@@ -113,6 +113,13 @@
                         event.preventDefault();
                     }
                     break;
+                case 72:  //Toggle help (ALT-H)
+                    if (event.altKey) {
+                        helpPopup = window.open("./README.md", "_blank");
+
+                        event.preventDefault();
+                    }
+                    break;
                 }
             }
             
@@ -720,6 +727,7 @@
                 <div id="currentParagraph">Feel free to be creative.<div id="cursor"></div></div>
             </div>
         </div>
+        <div>HELP</div>
     </body>
     <audio id="audioTypewriter" hidden="hidden">
         <source src="audio/type.ogg" type="audio/ogg">
