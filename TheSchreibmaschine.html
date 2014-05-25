@@ -299,6 +299,8 @@
                 if (oldCurrentParagraph !== undefined && newCurrentParagraph !== oldCurrentParagraph) {
                     oldCurrentParagraph.removeAttribute("id");
                     oldCurrentParagraph.className = "";
+                    
+                    oldCurrentParagraph.normalize(); //Merges the textNodes into one.
                 }
                 newCurrentParagraph.id = "currentParagraph";
                 newCurrentParagraph.className = "currentParagraph";
