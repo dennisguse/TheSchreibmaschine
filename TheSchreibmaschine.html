@@ -308,29 +308,6 @@
                 centerCurrentParagraph(newCurrentParagraph);
             }
             function centerCurrentParagraph(newCurrentParagraph) {
-                //Old school I: centers current paragraph
-                /*
-                var cursor = document.getElementById("cursor");
-                
-                var newCurrentParagraph = newCurrentParagraph || document.getElementById("currentParagraph");
-                var currentParagraphIndex = [].indexOf.call(newCurrentParagraph.parentNode.children, newCurrentParagraph);
-                
-                var lineHeight = 0;
-                for(var idx=0; idx < currentParagraphIndex; idx++) {
-                     lineHeight += page.children[idx].offsetHeight;
-                }
-                lineHeight += currentParagraph.offsetHeight / 2;
-                  
-                var centeringOffset = (window.innerHeight / 2) - lineHeight;
-                //console.log("DEBUG:setCurrentParagraph: " + lineHeight + " " + centeringOffset);
-                */                                
-                
-                //Old school II: center's cursor (using jquery)
-                /*
-                var cursor = $("#cursor");
-                var centeringOffset = (window.innerHeight / 2) - cursor.position().top - cursor[0].offsetHeight;
-                */
-
                 //New school: Just center the cursor.
                 var centeringOffset = (window.innerHeight / 2) - cursor.offsetTop;
                 page.style.top = centeringOffset + "px";
@@ -727,9 +704,8 @@
     draggable="true" ondragstart="saveDrag(event)">
         <div id="editor" ondrop="loadDrop(event)" ondragover="loadAllowDrop(event)">
             <div id="page">
-                <div id="currentParagraph">This is a hello to the world<div id="cursor"></div></div>
-                <div>huhu</div>
-                <div>Haha</div>
+                <div id="currentParagraph">Here you can start writing without distraction.<div id="cursor"></div></div>
+                <div>Feel free to be creative.</div>
             </div>
         </div>
     </body>
