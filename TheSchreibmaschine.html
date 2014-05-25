@@ -75,7 +75,7 @@
                     del(event.ctrlKey);
                     break;
                 
-                //Specials
+                //Specials: configuration
                 case 65: //Toggle text alignment (ALT+A)
                     if (event.altKey) {
                         toggleTextAlignment();
@@ -94,9 +94,22 @@
                         event.preventDefault();
                     }
                     break;
-                case 83://Toggle typewriter-volume (ALT+S)
+                case 86://Toggle typewriter-volume (ALT+V)
                     if (event.altKey) {
                         toggleTypewriterVolume();
+                        event.preventDefault();
+                    }
+                    break;
+                //Specials: functionality
+                case 83:  //Save document (ALT-S)
+                    if (event.altKey) {
+                        saveDownload();
+                        event.preventDefault();
+                    }
+                    break;
+                case 78:  //Download document (ALT-N)
+                    if (event.altKey) {
+                        window.open(window.location.href,'_blank');;
                         event.preventDefault();
                     }
                     break;
@@ -704,8 +717,8 @@
     draggable="true" ondragstart="saveDrag(event)">
         <div id="editor" ondrop="loadDrop(event)" ondragover="loadAllowDrop(event)">
             <div id="page">
-                <div id="currentParagraph">Here you can start writing without distraction.<div id="cursor"></div></div>
-                <div>Feel free to be creative.</div>
+                <div>Here you can start writing without distraction.</div>
+                <div id="currentParagraph">Feel free to be creative.<div id="cursor"></div></div>
             </div>
         </div>
     </body>

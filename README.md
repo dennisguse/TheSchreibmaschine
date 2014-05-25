@@ -18,7 +18,7 @@ Features:
 * Your current paragraph remains centered.
 * There is no text selection.
 * There is no CTRL-Z.
-* There is only keyboard control.
+* You can do everything using a keyboard.
 
 -----
 Hidden Features:
@@ -28,9 +28,13 @@ Hidden Features:
 * CTRL-DEL and CTRL-BACKSPACE
 * CTRL-V (pasting from clipboard) is working in Chrome and IE.
 
+* ALT-S: Save the document (currently done via download).
+* ALT-N: Open a new window of TheSchreibmaschine.
+
 * ALT-A: toggle text alignment (left vs. center).
 * ALT-W: toggle page width (40% or 80% of full window).
 * ALT-C: toggle background color (white vs. whitesmoke).
+* ALT-V: toggle typewriter volume (0.0 vs. 1.0).
 * Use your browser's support for zooming in/out to change the font size.
 
 -----
@@ -66,6 +70,8 @@ The following events are captured:
 * window.onresize
 * document.onkeydown
 * document.onkeypress
+* document.onclick
+* document.ondbclick
 
 All animations and visual things are done in CSS:
 * cursor
