@@ -653,21 +653,16 @@
             min-height: 1.1em; 
             
             -padding-top: 1em;
+            margin-top: 0.2em;
+
+            white-space:pre-wrap;
             
             -webkit-transition: all 0.3s linear;
             -moz-transition: all 0.3s linear;
             -ms-transition: all 0.3s linear;
             -o-transition: all 0.3s linear;
             transition: all 0.3s linear;
-        }
 
-        
-        #page > div.currentParagraph {
-            color: black;
-            -padding-top: 1em;
-        }
-
-        div {
             word-wrap:break-word;
             word-break:break-all; /*Required so longer text stays in line with cursor and does not break into new line.*/
             -webkit-hyphens: auto;
@@ -675,8 +670,12 @@
             -ms-hyphens: auto;
             -o-hyphens: auto;
             hyphens: auto;
-            
-            margin-top: 0.2em;
+        }
+
+        
+        #page > div.currentParagraph {
+            color: black;
+            -padding-top: 1em;
         }
         
         #cursor {
