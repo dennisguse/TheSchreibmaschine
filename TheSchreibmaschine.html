@@ -115,7 +115,6 @@
                 case 72:  //Toggle help (ALT-H)
                     if (event.altKey) {
                         helpPopup = window.open("./README.md", "_blank");
-
                         event.preventDefault();
                     }
                     break;
@@ -477,7 +476,9 @@
 
             /**
             Change the UI.
-            These functions overwrite the styles set by the css class #editor by setting the intended property directly at the editor element. The original value of the CSS definition cannot be accessed and thus the initial value must be guessed. Please make sure to be failsafe here.
+            These functions overwrite the styles set by the css class #editor by setting the intended property directly at the editor element.
+            The original value of the CSS definition cannot be accessed and thus the initial value must be guessed.
+            Please make sure to be failsafe here.
             */
             function toggleTextAlignment() {
                 console.log("Changing text alignment");
@@ -612,7 +613,6 @@
             box-orient: vertical;
             box-pack: center;
             box-align: center;
-            /*text-align: center;*/
 
             overflow: hidden;
 
@@ -720,20 +720,24 @@
         }
         </style>
     </head>
-    <body onload="window.onresize()" ondblclick="saveDownload()"
-    draggable="true" ondragstart="saveDrag(event)">
-        <div id="editor" ondrop="loadDrop(event)" ondragover="loadAllowDrop(event)">
+    <body onload="window.onresize()">
+        <div id="editor" 
+        ondragstart="saveDrag(event)"
+        ondragover="loadAllowDrop(event)"
+        ondrop="loadDrop(event)" 
+        draggable="true" 
+        ondblclick="saveDownload()">
             <div id="page">
                 <div>Here you can start writing without distraction.</div>
                 <div id="currentParagraph">Feel free to be creative.<div id="cursor"></div></div>
             </div>
+            <audio id="audioTypewriter" hidden="hidden">
+                <source src="audio/type.ogg" type="audio/ogg">
+                <source src="audio/type.mp3" type="audio/mpeg">
+                <source src="audio/type.opus" type="audio/opus">
+                <source src="audio/type.wav" type="audio/wav">
+            </audio>
+            <img id="dragPreview" />
         </div>
     </body>
-    <audio id="audioTypewriter" hidden="hidden">
-        <source src="audio/type.ogg" type="audio/ogg">
-        <source src="audio/type.mp3" type="audio/mpeg">
-        <source src="audio/type.opus" type="audio/opus">
-        <source src="audio/type.wav" type="audio/wav">
-    </audio>
-    <img id="dragPreview" />
 </html>
