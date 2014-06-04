@@ -17,7 +17,7 @@
         <link rel="icon" type="image/svg+xml" href="./graphics/logo_animated.svg"/>
                 
         <script type="text/javascript">
-            document.onkeydown = function(event) {
+            function handleKeyDown(event) {
                 console.log(event);
                 switch (event.keyCode) {
                 //Navigation
@@ -121,7 +121,7 @@
                 }
             }
             
-            document.onkeypress = function(event) {
+            function handleKeyPress(event) {
                 //console.log(event);
                 
                 switch (event.keyCode) {
@@ -288,7 +288,7 @@
             /*
             * Mouse navigation in text using selection range.
             */
-            document.onclick = function(event) {
+            function handleMouseClick(event) {
                 console.log("Moving cursor to mouse click");
                 
                 var textNode = null;
@@ -614,6 +614,8 @@
             box-pack: center;
             box-align: center;
 
+            outline: none;
+
             overflow: hidden;
 
             background-color: white;            
@@ -640,6 +642,7 @@
             right: 0;
             margin: 0 auto;
             width : 80%;
+            
             -webkit-transition: top 0.3s;
             -moz-transition: top 0.3s;
             -ms-transition: top 0.3s;
@@ -726,8 +729,9 @@
         ondragover="loadAllowDrop(event)"
         ondrop="loadDrop(event)" 
         draggable="true" 
-        ondblclick="saveDownload()">
-            <div id="page">
+        ondblclick="saveDownload()"
+        tabindex="1" onkeypress="handleKeyPress(event)" onkeydown="handleKeyDown(event)" >
+            <div id="page" onclick="handleMouseClick(event)">
                 <div>Here you can start writing without distraction.</div>
                 <div id="currentParagraph">Feel free to be creative.<div id="cursor"></div></div>
             </div>
