@@ -25,11 +25,14 @@ Hidden Features:
 * Allows drag and drop for loading and saving.
 * Download of current text is triggered on double click.
 * Use in fullscreen mode (press F11).
+
 * CTRL-DEL and CTRL-BACKSPACE
 * CTRL-V (pasting from clipboard) is working in Chrome and IE.
 
 * ALT-S: Save the document (currently done via download).
 * ALT-N: Open a new window of TheSchreibmaschine.
+
+* ALT-H: Display this document as popup.
 
 * ALT-A: toggle text alignment (left vs. center).
 * ALT-W: toggle page width (40% or 80% of full window).
@@ -41,6 +44,11 @@ Hidden Features:
 Known Limitations:
 * At the moment ONLY tested in Google Chrome and Epiphany.
 * Does not work in Firefox (at least not on Ubuntu 13.10), because textNode.splitText() does not update the length correctly.
+
+
+-----
+Code-Repository
+https://github.com/dennisguse/TheSchreibmaschine
 
 -----
 How it works:
