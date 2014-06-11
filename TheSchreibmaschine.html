@@ -529,7 +529,7 @@
             	var downloadLink = document.createElement("a");
             	downloadLink.download = fileNameToSaveAs;
                	downloadLink.innerHTML = "Download File";
-           		downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
+           		downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
             	downloadLink.click();
             }
         </script>
@@ -727,7 +727,7 @@
         <div id="editor" 
         ondragstart="saveDrag(event)"
         ondragover="loadAllowDrop(event)"
-        ondrop="loadDrop(event)" 
+        ondrop="loadDrop(event)"
         draggable="true" 
         ondblclick="saveDownload()"
         tabindex="1" onkeypress="handleKeyPress(event)" onkeydown="handleKeyDown(event)" >
