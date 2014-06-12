@@ -19,6 +19,7 @@ Features:
 * There is no text selection.
 * There is no CTRL-Z.
 * You can do everything using a keyboard.
+* Thesaurus (GERMAN only) via http://openthesaurus.de
 
 -----
 Hidden Features:
@@ -28,6 +29,7 @@ Hidden Features:
 
 * CTRL-DEL and CTRL-BACKSPACE
 * CTRL-V (pasting from clipboard) is working in Chrome and IE.
+* CTRL-SPACE retrieves alternatives for current word (the one around your cursor) to openthesaurus.de.
 
 * ALT-S: Save the document (currently done via download).
 * ALT-N: Open a new window of TheSchreibmaschine.
