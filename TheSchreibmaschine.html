@@ -650,6 +650,7 @@
                 thesaurusXHR.onerror = thesaurusHandleError;        
                 thesaurusXHR.ontimeout = thesaurusHandleTimeout;
                 thesaurusXHR.onload = thesaurusHandleLoad;
+//                setTimeout(thesaurusHandleLoad, 3000);
 
                 thesaurusXHR.open("GET", url + thesaurusWord, true);            
                 thesaurusXHR.send();
@@ -693,10 +694,11 @@
                     thesaurus.children["result"].style.opacity = 1;
                     thesaurus.children["error"].style.opacity = 0;
 
-                    thesaurus.children["result"].innerHTML = synonymShown;
+                    thesaurus.children["result"].innerHTML = synonymShown.length > 0 ? synonymShown.join(", ") : "NA";
 
                     thesaurusXHR = null;
                     thesaurusWord = null;
+                    setTimeout(thesaurusAutoHide, 10000);
                 }
             }
             function thesaurusHandleTimeout() {
@@ -708,10 +710,11 @@
                 thesaurus.children["loading"].style.opacity = 0;
                 thesaurus.children["result"].style.opacity = 0;
                 thesaurus.children["error"].style.opacity = 1;
+                setTimeout(thesaurusAutoHide, 10000);
             }
             
             function thesaurusHandleError() {
-                console.log("Thesaurus-timeout " + thesaurusXHR.status);
+                console.log("Thesaurus-error " + thesaurusXHR.status);
                 thesaurusXHR = null;
                 thesaurusWord = null;
                 
@@ -719,6 +722,15 @@
                 thesaurus.children["loading"].style.opacity = 0;
                 thesaurus.children["result"].style.opacity = 0;
                 thesaurus.children["error"].style.opacity = 1;
+                setTimeout(thesaurusAutoHide, 10000);
+            }
+            function thesaurusAutoHide() {
+                if (thesaurusXHR == null) {
+                    thesaurus.children["loading"].style.opacity = 0;
+                    thesaurus.children["result"].style.opacity = 0;
+                    thesaurus.children["error"].style.opacity = 0;
+                    thesaurus.children["result"].innerHTML = "";
+                }
             }
         </script>
         
@@ -814,24 +826,6 @@
             -o-animation: blink 3s infinite;
             animation: blink 3s infinite;
         }
-
-        #thesaurus {
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            margin: 0 auto;
-            margin-bottom:0.3em;
-            width : 60%;
-            
-            font-size: 0.8em;
-            
-            -webkit-transition: opacity 1s ease-in-out;
-            -moz-transition: opacity 1s ease-in-out;
-            -ms-animation: opacity 1s ease-in-out;
-            -o-transition: opacity 1s ease-in-out;
-            transition: opacity 1s ease-in-out;
-        }        
         @-webkit-keyframes blink {
             0% {opacity: 1;}
             40% {opacity: 1;}
@@ -862,6 +856,132 @@
             70% {opacity: 0.2;}
             100% {opacity: 1;}
         }
+        
+        #thesaurus {
+            position: absolute;
+  
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin: 0 auto;
+            margin-bottom: 0.3em;
+            width : 60%;
+            
+            font-size: 0.8em;
+
+            text-align: center;
+        }        
+
+        #thesaurus > .loading {        
+            display:inline-block;
+            -webkit-transition:opacity 1000ms ease-out;
+            -moz-transition:opacity 1000ms ease-out;
+            -ms-transition:opacity 1000ms ease-out;
+            -o-transition:opacity 1000ms ease-out;
+            transition:opacity 1000ms ease-out;
+        }
+        
+        #thesaurus > .result {        
+            display:inline-block;
+            -webkit-transition:opacity 1000ms ease-out;
+            -moz-transition:opacity 1000ms ease-out;
+            -ms-transition:opacity 1000ms ease-out;
+            -o-transition:opacity 1000ms ease-out;
+            transition:opacity 1000ms ease-out;
+        }
+
+        #thesaurus > .error {        
+            display:inline-block;
+            -webkit-transition:opacity 1000ms ease-out;
+            -moz-transition:opacity 1000ms ease-out;
+            -ms-transition:opacity 1000ms ease-out;
+            -o-transition:opacity 1000ms ease-out;
+            transition:opacity 1000ms ease-out;
+        }
+
+        
+        #thesaurus > .loading > div {
+            display:inline-block;
+            /*float: left;*/
+            width: 0.3em;
+            height: 0.3em;
+            margin: 0 0.3em;
+            background: lightgrey;
+  
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            -ms-border-radius: 50%;
+            -o-border-radius: 50%;
+            border-radius: 50%;
+  
+            opacity: 0;
+  
+            -webkit-box-shadow: 0 0 2px black;
+            -moz-box-shadow: 0 0 2px black;
+            -ms-box-shadow: 0 0 2px black;
+            -o-box-shadow: 0 0 2px black;
+            box-shadow: 0 0 2px black;
+  
+            -webkit-animation: loadingFade 1s infinite;
+            -moz-animation: loadingFade 1s infinite;
+            -ms-animation: loadingFade 1s infinite;
+            -o-animation: loadingFade 1s infinite;
+            animation: loadingFade 1s infinite;
+        }
+
+        #thesaurus > .loading > div:nth-child(2) {
+            -webkit-animation-delay: 0.1s;
+            -moz-animation-delay: 0.1s;
+            -ms-animation-delay: 0.1s;
+            -o-animation-delay: 0.1s;
+            animation-delay: 0.1s;
+        }
+
+        #thesaurus > .loading > div:nth-child(3) {
+            -webkit-animation-delay: 0.2s;
+            -moz-animation-delay: 0.2s;
+            -ms-animation-delay: 0.2s;
+            -o-animation-delay: 0.2s;
+            animation-delay: 0.2s;
+        }
+
+        #thesaurus > .loading > div:nth-child(4) {
+            -webkit-animation-delay: 0.3s;
+            -moz-animation-delay: 0.3s;
+            -ms-animation-delay: 0.3s;
+            -o-animation-delay: 0.3s;
+            animation-delay: 0.3s;
+        }
+
+        @-webkit-keyframes loadingFade {
+            0% { opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { opacity: 0; }
+        }
+
+        @-moz-keyframes loadingFade {
+            0% { opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { opacity: 0; }
+        }
+        
+        @-ms-keyframes loadingFade {
+            0% { opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { opacity: 0; }
+        }
+
+        @-o-keyframes loadingFade {
+            0% { opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { opacity: 0; }
+        }
+
+        @keyframes loadingFade {
+            0% { opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { opacity: 0; }
+        }
         </style>
     </head>
     <body onload="window.onresize()">
@@ -884,9 +1004,14 @@
             </audio>
             <img id="dragPreview" />
             <div id="thesaurus">
-                <div name="loading" style="opacity:0">Loading....</div>
-                <div name="result" style="opacity:0"></div>
-                <div name="error"style="opacity:0">Failed request!<div>
+                <div name="loading" class="loading" style="opacity:0">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                 </div>
+                <div name="result" class="result" style="opacity:0"></div>
+                <div name="error" class="error" style="opacity:0">Something went wrong...<div>
             </div>
         </div>
     </body>
