@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="de">
     <head>
         <title>The Schreibmaschine</title>
         
@@ -120,7 +120,7 @@
                     break;
                 case 32:
                     if (event.ctrlKey) { //Open Thesaurus (CTRL-SPACE)
-                        thesaurusRequest();
+                        thesaurusLookup();
                         event.preventDefault();
                         event.stopPropagation();
                     }
@@ -619,120 +619,48 @@
                 }
             }
         </script>
+        
         <script type="text/javascript">
             /**
-            * Openthesaurus.de integration.
+            * Thesauri
             */
-            var url = "http://g00se.org/openthesaurus/?format=application/json&q="; //Using a proxy that allows CORS!
-            
-            var thesaurusWord = null;
-            var thesaurusXHR = null;
-
-            function thesaurusRequest() {
+            function thesaurusLookup() {
                 var cursor = document.getElementById("cursor");
                 
                 var stringBefore = cursor.previousSibling != null ? cursor.previousSibling.data : "";
                 var stringAfter = cursor.nextSibling != null ? cursor.nextSibling.data : "";
-                thesaurusWord = wordCurrent(stringBefore, stringAfter);
                 
-                if (typeof thesaurusWord != "string" || thesaurusWord.length <= 2) {
-                    thesaurusWord = null;
-                    return;
-                }
-            
-                if (thesaurusXHR != null) {
-                    thesaurusXHR.abort();
-                    thesaurusXHR = null;
-                }
-                       
-                thesaurusXHR = new XMLHttpRequest();
-
-                thesaurusXHR.onerror = thesaurusHandleError;        
-                thesaurusXHR.ontimeout = thesaurusHandleTimeout;
-                thesaurusXHR.onload = thesaurusHandleLoad;
-//                setTimeout(thesaurusHandleLoad, 3000);
-
-                thesaurusXHR.open("GET", url + thesaurusWord, true);            
-                thesaurusXHR.send();
+                var word = wordCurrent(stringBefore, stringAfter);
+                console.log("Thesaurus: DE")                                      
 
                 //Start UI 
-                var thesaurus = document.getElementById("thesaurus");
-                thesaurus.children["loading"].style.opacity = 1;
-                thesaurus.children["result"].style.opacity = 0;
-                thesaurus.children["error"].style.opacity = 0;
-            }
-            function thesaurusHandleLoad() {
-                if (thesaurusXHR != null && thesaurusXHR.readyState === 4) {
-                    if (thesaurusXHR.status !== 200 || !thesaurusXHR.response) {
-                        console.log(thesaurusXHR);
-                        thesaurusHandleError();
-                        return;
-                    }
-    
-                    var response = [];                
-                    try{
-                        response = JSON.parse(thesaurusXHR.response);
-                    }catch(e) {
-                        console.log(e);
-                        thesaurusHandleError();
-                        return;
-                    }
+                var thesaurusUI = document.getElementById("thesaurusUI");
+                thesaurusUI.children["loading"].style.opacity = 1;
+                thesaurusUI.children["result"].style.opacity = 0;
 
-                    //Parse and flatten response (hashmap removes duplicates).
-                    var synonyms = {};
-                    for(var i=0; i < response.synsets.length; i++)
-                        for(var j=0; j < response.synsets[i].terms.length; j++)
-                            synonyms[response.synsets[i].terms[j].term.toUpperCase()] = response.synsets[i].terms[j].term;
+                try {                
+                    var synonyms = thesaurus["de"].lookup(word).sort();
+                    //TODO Remove searched word and set it to front.
+                    console.log(synonyms);
+                    thesaurusUI.children["loading"].style.opacity = 0;
+                    thesaurusUI.children["result"].style.opacity = 1;
 
-                    delete synonyms[thesaurusWord.toUpperCase()];
-                
-                    var synonymShown = (Object.keys(synonyms)).map(function(v) { return synonyms[v]; }).sort();
-                    console.log(synonymShown);
-
-                    var thesaurus = document.getElementById("thesaurus");
-                    thesaurus.children["loading"].style.opacity = 0;
-                    thesaurus.children["result"].style.opacity = 1;
-                    thesaurus.children["error"].style.opacity = 0;
-
-                    thesaurus.children["result"].innerHTML = synonymShown.length > 0 ? synonymShown.join(", ") : "NA";
-
-                    thesaurusXHR = null;
-                    thesaurusWord = null;
-                    setTimeout(thesaurusAutoHide, 10000);
+                    thesaurusUI.children["result"].innerHTML = synonyms.length > 0 ? synonyms.join(", ") : "n/a";
+                } catch (e) {
+                    console.log(e);
+                    thesaurusUI.children["result"].innerHTML = "... not working...";
                 }
-            }
-            function thesaurusHandleTimeout() {
-                console.log("Thesaurus-timeout " + thesaurusXHR.status);
-                thesaurusXHR = null;
-                thesaurusWord = null;
-                
-                var thesaurus = document.getElementById("thesaurus");
-                thesaurus.children["loading"].style.opacity = 0;
-                thesaurus.children["result"].style.opacity = 0;
-                thesaurus.children["error"].style.opacity = 1;
-                setTimeout(thesaurusAutoHide, 10000);
-            }
-            
-            function thesaurusHandleError() {
-                console.log("Thesaurus-error " + thesaurusXHR.status);
-                thesaurusXHR = null;
-                thesaurusWord = null;
-                
-                var thesaurus = document.getElementById("thesaurus");
-                thesaurus.children["loading"].style.opacity = 0;
-                thesaurus.children["result"].style.opacity = 0;
-                thesaurus.children["error"].style.opacity = 1;
                 setTimeout(thesaurusAutoHide, 10000);
             }
             function thesaurusAutoHide() {
-                if (thesaurusXHR == null) {
-                    thesaurus.children["loading"].style.opacity = 0;
-                    thesaurus.children["result"].style.opacity = 0;
-                    thesaurus.children["error"].style.opacity = 0;
-                    thesaurus.children["result"].innerHTML = "";
-                }
+                var thesaurusUI = document.getElementById("thesaurusUI");
+                thesaurusUI.children["loading"].style.opacity = 0;
+                thesaurusUI.children["result"].style.opacity = 0;
+                thesaurusUI.children["result"].innerHTML = "";
             }
-        </script>
+
+        </script>        
+        <script type="text/javascript" src="thesaurus/openthesaurus_de.js"></script>
         
         <style>
         html, body {
@@ -857,7 +785,7 @@
             100% {opacity: 1;}
         }
         
-        #thesaurus {
+        #thesaurusUI {
             position: absolute;
   
             left: 0;
@@ -872,8 +800,13 @@
             text-align: center;
         }        
 
-        #thesaurus > .loading {        
-            display:inline-block;
+        #thesaurusUI > .loading {        
+            position:absolute;
+            left:0;
+            right:0;
+            bottom:0;
+            height:100%
+            width:100%;
             -webkit-transition:opacity 1000ms ease-out;
             -moz-transition:opacity 1000ms ease-out;
             -ms-transition:opacity 1000ms ease-out;
@@ -881,26 +814,22 @@
             transition:opacity 1000ms ease-out;
         }
         
-        #thesaurus > .result {        
-            display:inline-block;
+        #thesaurusUI > .result {        
+            position:absolute;
+            left:0;
+            right:0;
+            bottom:0;
+            height:100%
+            width:100%;
+            z-index:10;
             -webkit-transition:opacity 1000ms ease-out;
             -moz-transition:opacity 1000ms ease-out;
             -ms-transition:opacity 1000ms ease-out;
             -o-transition:opacity 1000ms ease-out;
             transition:opacity 1000ms ease-out;
         }
-
-        #thesaurus > .error {        
-            display:inline-block;
-            -webkit-transition:opacity 1000ms ease-out;
-            -moz-transition:opacity 1000ms ease-out;
-            -ms-transition:opacity 1000ms ease-out;
-            -o-transition:opacity 1000ms ease-out;
-            transition:opacity 1000ms ease-out;
-        }
-
         
-        #thesaurus > .loading > div {
+        #thesaurusUI > .loading > div {
             display:inline-block;
             /*float: left;*/
             width: 0.3em;
@@ -929,7 +858,7 @@
             animation: loadingFade 1s infinite;
         }
 
-        #thesaurus > .loading > div:nth-child(2) {
+        #thesaurusUI > .loading > div:nth-child(2) {
             -webkit-animation-delay: 0.1s;
             -moz-animation-delay: 0.1s;
             -ms-animation-delay: 0.1s;
@@ -937,7 +866,7 @@
             animation-delay: 0.1s;
         }
 
-        #thesaurus > .loading > div:nth-child(3) {
+        #thesaurusUI > .loading > div:nth-child(3) {
             -webkit-animation-delay: 0.2s;
             -moz-animation-delay: 0.2s;
             -ms-animation-delay: 0.2s;
@@ -945,7 +874,7 @@
             animation-delay: 0.2s;
         }
 
-        #thesaurus > .loading > div:nth-child(4) {
+        #thesaurusUI > .loading > div:nth-child(4) {
             -webkit-animation-delay: 0.3s;
             -moz-animation-delay: 0.3s;
             -ms-animation-delay: 0.3s;
@@ -1003,7 +932,7 @@
                 <source src="audio/type.wav" type="audio/wav">
             </audio>
             <img id="dragPreview" />
-            <div id="thesaurus">
+            <div id="thesaurusUI">
                 <div name="loading" class="loading" style="opacity:0">
                     <div></div>
                     <div></div>
@@ -1011,7 +940,6 @@
                     <div></div>
                  </div>
                 <div name="result" class="result" style="opacity:0"></div>
-                <div name="error" class="error" style="opacity:0">Something went wrong...<div>
             </div>
         </div>
     </body>
