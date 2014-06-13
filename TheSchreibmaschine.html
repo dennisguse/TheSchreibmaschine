@@ -624,6 +624,7 @@
             /**
             * Thesauri
             */
+            var thesaurusAutoHideTimeout = null;
             function thesaurusLookup() {
                 var cursor = document.getElementById("cursor");
                 
@@ -650,7 +651,8 @@
                     console.log(e);
                     thesaurusUI.children["result"].innerHTML = "... not working...";
                 }
-                setTimeout(thesaurusAutoHide, 10000);
+                clearTimeout(thesaurusAutoHideTimeout);
+                thesaurusAutoHideTimeout = setTimeout(thesaurusAutoHide, 10000);
             }
             function thesaurusAutoHide() {
                 var thesaurusUI = document.getElementById("thesaurusUI");
