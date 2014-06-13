@@ -88,5 +88,3 @@ All animations and visual things are done in CSS:
 * currentParagraph
 * editor
 * page
-
-Uses JQuery. Thanks.
