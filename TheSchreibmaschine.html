@@ -915,7 +915,7 @@
         }
         </style>
     </head>
-    <body onload="window.onresize()">
+    <body onload="window.onresize()" onbeforeunload="return 'Hope you saved your text.';">
         <div id="editor" 
         ondragstart="saveDrag(event)"
         ondragover="loadAllowDrop(event)"
