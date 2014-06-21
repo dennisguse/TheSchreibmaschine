@@ -152,8 +152,10 @@
                        
             function soundTypewriter() {
                 var audioTypewriter = document.getElementById("audioTypewriter");
+                if (audioTypewriter.muted) return;
+                
                 var sound = audioTypewriter.cloneNode(true);
-                sound.volume = audioTypewriter.volume; //cloneNode and setAttribute() do not copy this property (modified via javascript).
+                sound.removeAttribute("muted"); //cloneNode(true) copies the initial muted value.
                 sound.play();
             }
             
@@ -519,11 +521,11 @@
                     editor.style.backgroundColor = "white";
                 else editor.style.backgroundColor = "whitesmoke";
             }
-            
+
             function toggleTypewriterVolume() {
-                console.log("Changing typing volume");
+                console.log("(Un)muting typing sound");
                 var audioTypewriter = document.getElementById("audioTypewriter");
-                audioTypewriter.volume = audioTypewriter.volume === 1 ? 0 : 1;
+                audioTypewriter.muted = !audioTypewriter.muted;
             }
         </script>
         <script type="text/javascript">
@@ -839,7 +841,7 @@
             margin: 0 0.3em;
             background: lightgrey;
   
-            -webkit-border-radius: 50%;
+            -webkit-border-ras: 50%;
             -moz-border-radius: 50%;
             -ms-border-radius: 50%;
             -o-border-radius: 50%;
@@ -927,7 +929,7 @@
                 <div>Here you can start writing without distraction.</div>
                 <div id="currentParagraph">Feel free to be creative.<div id="cursor"></div></div>
             </div>
-            <audio id="audioTypewriter" hidden="hidden">
+            <audio id="audioTypewriter" hidden="hidden" muted>
                 <source src="audio/type.ogg" type="audio/ogg">
                 <source src="audio/type.mp3" type="audio/mpeg">
                 <source src="audio/type.opus" type="audio/opus">
