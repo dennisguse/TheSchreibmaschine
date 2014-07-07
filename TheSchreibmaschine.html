@@ -195,22 +195,12 @@
             function moveCursorUp() {
                 var cursor = document.getElementById("cursor");
                 
-                var newLine = cursor.parentElement.previousElementSibling;
-                if (newLine !== null) {
-                    newLine.appendChild(cursor);
-                    setCurrentParagraph(newLine);
-                }
-				
-				
+                moveCursorTo(null, cursor.parentElement.previousElementSibling);
             }
             function moveCursorDown() {
                 var cursor = document.getElementById("cursor");
 
-                var newLine = cursor.parentElement.nextElementSibling;
-                if (newLine !== null) {
-                    newLine.appendChild(cursor);
-                    setCurrentParagraph(newLine);
-                }
+				moveCursorTo(null, cursor.parentElement.nextElementSibling);
             }
             
             function moveCursorLeft(ctrl) {
@@ -276,29 +266,30 @@
             function moveCursorEND() {
                 currentParagraph.appendChild(cursor);
             }
-            
-            function moveCursorTo(textNode, offset) {
-                var newCurrentParagraph = textNode.parentElement;
-                console.log("Moving cursor to mouse to " + offset + " in " + newCurrentParagraph);
+            //If index is null, value from newCurrentParagraph is taken.
+            function moveCursorTo(newIndex, newCurrentParagraph) {
+            	if (newIndex == null && newCurrentParagraph == null) return;
+            	
+                var cursor = document.getElementById("cursor");				
+				cursor.parentElement.setAttribute("data-cursor-position", getCursorPosition());
+				
+				var currentParagraph = cursor.parentElement;
+            	var newCurrentParagraph = newCurrentParagraph || currentParagraph;
 
-                var cursor = document.getElementById("cursor");
-
-                var oldCurrentParagraph = cursor.parentElement;
-
-                //If hte user clicks right from the cursor, this adds an additional offset that must be stored as normalize() will remove it.
-                var additionalOffset = 0;
-                if (oldCurrentParagraph == newCurrentParagraph)
-                    if (textNode.previousElementSibling == cursor) 
-                        additionalOffset = cursor.previousSibling.length;
-
+				var index = newIndex || newCurrentParagraph.getAttribute("data-cursor-position");
+				if (index == null) index = Number.MAX_VALUE;
+				
                 //Cleanup old paragraph
+                var currentParagraph = cursor.parentElement;
                 cursor.remove();
-                oldCurrentParagraph.normalize();
+                currentParagraph.normalize();
+                
+                newCurrentParagraph.normalize();
     
                 //Set cursor
                 textNode = newCurrentParagraph.firstChild;
                 
-                var textNodeAfter = textNode.splitText(offset + additionalOffset);
+                var textNodeAfter = textNode.splitText(index);
                 if (textNodeAfter.length > 0) {
                     newCurrentParagraph.insertBefore(cursor, textNodeAfter);
                 } else {
@@ -306,6 +297,23 @@
                 }
 
                 setCurrentParagraph(newCurrentParagraph);
+            }
+            
+            function moveCursorToClick(textNode, offset) {
+                var newCurrentParagraph = textNode.parentElement;
+                console.log("Moving cursor to mouse to " + offset + " in " + newCurrentParagraph);
+
+                var cursor = document.getElementById("cursor");
+
+                var oldCurrentParagraph = cursor.parentElement;
+
+                //If the user clicks right from the cursor, this adds an additional offset that must be stored as normalize() will remove it.
+                var additionalOffset = 0;
+                if (oldCurrentParagraph == newCurrentParagraph)
+                    if (textNode.previousElementSibling == cursor) 
+                        additionalOffset = cursor.previousSibling.length;
+
+             	moveCursorTo(offset + additionalOffset, newCurrentParagraph);
             }
             
             function getCursorPosition() {
@@ -332,7 +340,7 @@
                     textNode = range.startContainer;
                     offset = range.startOffset;
                 }
-                if (textNode.nodeType == 3) moveCursorTo(textNode, offset);
+                if (textNode.nodeType == 3) moveCursorToClick(textNode, offset);
                 else console.log("...not moving cursor as click was not on textnode.");
             }
                         
