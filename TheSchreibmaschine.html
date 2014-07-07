@@ -192,21 +192,21 @@
             /**
             Navigation.
             */
-            function moveCursorUp() {
+            function moveCursorUp(index) {
                 var cursor = document.getElementById("cursor");
                 
-                moveCursorTo(null, cursor.parentElement.previousElementSibling);
+                moveCursorTo(index, cursor.parentElement.previousElementSibling);
             }
-            function moveCursorDown() {
+            function moveCursorDown(index) {
                 var cursor = document.getElementById("cursor");
 
-				moveCursorTo(null, cursor.parentElement.nextElementSibling);
+				moveCursorTo(index, cursor.parentElement.nextElementSibling);
             }
             
             function moveCursorLeft(ctrl) {
                 var cursor = document.getElementById("cursor");
                 if (cursor.previousSibling === null) { //goto end of previous line
-                    moveCursorUp();
+                    moveCursorUp(Number.MAX_VALUE);
                     return;
                 }
                 if (cursor.previousSibling.nodeType ==  3 && cursor.previousSibling.length == 1) { //Is a text node and must not be splitted.
@@ -233,7 +233,7 @@
             function moveCursorRight(ctrl) {
                 var cursor = document.getElementById("cursor");
                 if (cursor.nextSibling == null) { //goto beginning of next line
-                    moveCursorDown();
+                    moveCursorDown(0);
                     return;
                 }
                 if (cursor.nextSibling.nodeType ==  3 && cursor.nextSibling.length == 1) { //Is a text node and must not be splitted.
@@ -276,7 +276,7 @@
 				var currentParagraph = cursor.parentElement;
             	var newCurrentParagraph = newCurrentParagraph || currentParagraph;
 
-				var index = newIndex || newCurrentParagraph.getAttribute("data-cursor-position");
+				var index = newIndex != null ? newIndex : newCurrentParagraph.getAttribute("data-cursor-position");
 				if (index == null) index = Number.MAX_VALUE;
 				
                 //Cleanup old paragraph
@@ -288,14 +288,19 @@
     
                 //Set cursor
                 textNode = newCurrentParagraph.firstChild;
-                
-                var textNodeAfter = textNode.splitText(index);
-                if (textNodeAfter.length > 0) {
-                    newCurrentParagraph.insertBefore(cursor, textNodeAfter);
-                } else {
-                    newCurrentParagraph.appendChild(cursor);
+                if (index == 0) {
+                	newCurrentParagraph.insertBefore(cursor, textNode);
+	                setCurrentParagraph(newCurrentParagraph);
+	                return;
+                }
+                if (index > textNode.length) {
+  	                newCurrentParagraph.appendChild(cursor);
+	                setCurrentParagraph(newCurrentParagraph);
+	                return;
                 }
 
+                var textNodeAfter = textNode.splitText(index);
+                newCurrentParagraph.insertBefore(cursor, textNodeAfter);
                 setCurrentParagraph(newCurrentParagraph);
             }
             
