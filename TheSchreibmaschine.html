@@ -200,6 +200,8 @@
                     newLine.appendChild(cursor);
                     setCurrentParagraph(newLine);
                 }
+				
+				
             }
             function moveCursorDown() {
                 var cursor = document.getElementById("cursor");
@@ -305,7 +307,13 @@
 
                 setCurrentParagraph(newCurrentParagraph);
             }
-              
+            
+            function getCursorPosition() {
+                var cursor = document.getElementById("cursor");
+                if (cursor.previousSibling == undefined) return 0;
+                return cursor.previousSibling.length;
+            }
+            
             /*
             * Mouse navigation in text using selection range.
             */
