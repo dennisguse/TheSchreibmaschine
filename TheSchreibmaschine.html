@@ -642,7 +642,18 @@
                 }
             }
         </script>
+        <script type="text/javascript">
+            /**
+             * Updates UI after loading and sets writes added from url param.
+             */
+            function load() {
+                window.onresize();
 
+                if (window.location.search.length > 0) {
+                    write(decodeURIComponent(window.location.search.substr(1, window.location.search.length)));
+                }
+            };
+        </script>
         <script type="text/javascript">
             /**
              * Thesauri
@@ -938,7 +949,7 @@
             }
         </style>
     </head>
-    <body onload="window.onresize()" onbeforeunload="return 'Hope you saved your text.';">
+    <body onload="load()" onbeforeunload="return 'Hope you saved your text.';">
         <div id="editor" 
              ondragstart="saveDrag(event)"
              ondragover="loadAllowDrop(event)"
@@ -947,8 +958,7 @@
              ondblclick="saveDownload()"
              tabindex="1" onkeypress="handleKeyPress(event)" onkeydown="handleKeyDown(event)" >
             <div id="page" onclick="handleMouseClick(event)">
-                <div>Here you can start writing without distraction.</div>
-                <div id="currentParagraph">Feel free to be creative.<div id="cursor"></div></div>
+                <div id="currentParagraph"><div id="cursor"></div></div>
             </div>
             <audio id="audioTypewriter" hidden="hidden" muted>
                 <source src="audio/type.ogg" type="audio/ogg">

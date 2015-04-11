@@ -3,10 +3,9 @@
 TheSchreibmaschine.
 
 Offers nothing else than writing.
-It is meant to be for paragraph writting, so just write your current paragraph and then press enter.
-Your current paragraph (the one with the cursor) is highlighted over the rest of your text.
-
-The current paragraph will stay centered.
+It is meant to be for paragraph writing.
+So just write your current paragraph and then press enter.
+Your current paragraph (the one with the cursor) is highlighted and the current paragraph will stay centered.
 
 TheSchreibmaschine does not save or upload anything.
 If you close the tab/browser your text is gone!
@@ -18,7 +17,7 @@ Features:
 * Your current paragraph remains centered.
 * There is no text selection.
 * There is no CTRL-Z.
-* You can do everything using a keyboard.
+* You can do everything via a keyboard.
 * Thesaurus: (so far GERMAN only) offline data from http://openthesaurus.de
 
 -----
@@ -42,10 +41,11 @@ Hidden Features:
 * ALT-V: toggle typewriter volume (0.0 vs. 1.0).
 * Use your browser's support for zooming in/out to change the font size.
 
+* Default text: the URL search string (e.g. http://../?XXX) is used as default text.
 -----
 Known Limitations:
 * At the moment ONLY tested in Google Chrome and Epiphany.
-* Does not work in Firefox (at least not on Ubuntu 13.10), because textNode.splitText() does not update the length correctly.
+* Does not work in Firefox (at least not on Ubuntu 14.04), because textNode.splitText() does not update the length correctly.
 
 
 -----
