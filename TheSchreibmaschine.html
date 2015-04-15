@@ -682,7 +682,7 @@
 
                     thesaurusUI.children["result"].innerHTML = synonyms.length > 0 ? synonyms.join(", ") : "n/a";
                 } catch (e) {
-                    console.log(e);
+                    console.log("Thesaurus not available? The error message is: " + e);
                     thesaurusUI.children["result"].innerHTML = "... not working...";
                 }
                 clearTimeout(thesaurusAutoHideTimeout);
@@ -855,7 +855,6 @@
                 left:0;
                 right:0;
                 bottom:0;
-                height:100%;
                 width:100%;
                 z-index:10;
                 -webkit-transition:opacity 1000ms ease-out;
