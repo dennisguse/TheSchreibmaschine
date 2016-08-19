@@ -44,7 +44,7 @@ Hidden Features
 
 Use your browser's support for zooming in/out to change the font size.
 
-* Default text: the URL search string (e.g. http://../?XXX) is used as default text.
+* Default text: the URL search string (e.g. `http://../?XXX`) is used as default text.
 
 Known Limitations
 -----
@@ -70,25 +70,25 @@ The HTML code is the _underlying data model_ and updates itself.
 The paragraph containing the cursor is tagged as `currentParagraph` and centered (as well as highlighted).
 
 The following functions handle writing:
-* write()
-* moveCursorXXX()
-* backspace() and del()
-* newParagraph()
+* `write()`
+* `moveCursorXXX()`
+* `backspace()` and `del()`
+* `newParagraph()`
 
 These functions handle centering and highlighting of the paragraph:
-* setCurrentParagraph()
-* centerCurrentParagraph()
+* `setCurrentParagraph()`
+* `centerCurrentParagraph()`
 
 The following events are captured:
-* window.onresize
-* document.onkeydown
-* document.onkeypress
-* document.onclick
-* document.ondbclick
+* `window.onresize`
+* `document.onkeydown`
+* `document.onkeypress`
+* `document.onclick`
+* `document.ondbclick`
 
 All animations and visual things are done in CSS.
 The id's of these objects are:
-* cursor
-* currentParagraph
-* editor
-* page
+* `cursor`
+* `currentParagraph`
+* `editor`
+* `page`
