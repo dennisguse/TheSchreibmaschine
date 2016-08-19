@@ -11,6 +11,8 @@ TheSchreibmaschine does not save or upload anything.
 If you close the tab/browser your text is gone!
 You can either use the hidden features (see below) or simply save the TheSchreibmaschine-Webpage on your Computer and open this later again.
 
+Heavily uses HTML5 and CSS3 features (compliance with standards).
+
 Features
 ---
 
@@ -45,12 +47,6 @@ Hidden Features
 Use your browser's support for zooming in/out to change the font size.
 
 * Default text: the URL search string (e.g. `http://../?XXX`) is used as default text.
-
-Known Limitations
------
-
-* At the moment ONLY tested in Google Chrome and Epiphany.
-* Does not work in Firefox (at least not on Ubuntu 14.04), because textNode.splitText() does not update the length correctly.
 
 How it works
 -----
