@@ -10,6 +10,8 @@
         <meta name="description" content="TheSchreibmaschine. A distraction-free (almost feature-free) keyboard text editor. Focus on what you need."></meta>
         <meta name="version" content="Not yet set."></meta>
 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
         <meta charset="UTF-8">
 
         <link rel="icon" type="image/gif" href="data:image/gif;base64,R0lGODlhQABAAPABABEREf///yH5BAAAAAAALAAAAABAAEAAAAJujI+py+0Po5y02ouz3rz7D4biSJbmiabqyrbuC8cYAMgUbU94Hu384/s1gsIFsZg4Ig/KZaC5hCKlRarQ+sPytDmuzSsDx8Qw8svsQrfULPbKrYKn5Cj6yW7Cl/TOvv8PGCg4SFhoeIiYqLjYUQAAOw=="/>
@@ -39,26 +41,38 @@
                     case 35:
                         soundTypewriter();
                         moveCursorEND();
+                        event.preventDefault();
+                        event.stopPropagation();
                         break;
                     case 36:
                         soundTypewriter();
                         moveCursorPOS1();
+                        event.preventDefault();
+                        event.stopPropagation();
                         break;
                     case 37:
                         soundTypewriter();
                         moveCursorLeft(event.ctrlKey);
+                        event.preventDefault();
+                        event.stopPropagation();
                         break;
                     case 38:
                         soundTypewriter();
                         moveCursorUp();
+                        event.preventDefault();
+                        event.stopPropagation();
                         break;
                     case 39:
                         soundTypewriter();
                         moveCursorRight(event.ctrlKey);
+                        event.preventDefault();
+                        event.stopPropagation();
                         break;
                     case 40:
                         soundTypewriter();
                         moveCursorDown();
+                        event.preventDefault();
+                        event.stopPropagation();
                         break;
                         //Remove: DEL and CTRL+DEL
                     case 8:
@@ -71,6 +85,8 @@
                     case 46:
                         soundTypewriter();
                         del(event.ctrlKey);
+                        event.preventDefault();
+                        event.stopPropagation();
                         break;
 
                         //Specials: configuration
@@ -125,29 +141,45 @@
                             event.stopPropagation();
                         }
                         break;
+                    case 13: //Add new paragraph ()
+                        soundTypewriter();
+                        newParagraph();
+                        event.preventDefault();
+                        event.stopPropagation();
+                        break;
                 }
+
+                return true;
             }
 
             function handleKeyPress(event) {
                 //console.log(event);
-
+return true;
                 switch (event.keyCode) {
                     case 8: //for Webbrowser Opera (prevent back navigation)
                         return false;
                         break;
-                    case 13: //Add new paragraph
-                        soundTypewriter();
-                        newParagraph();
-                        break;
                     case 32: // Add space
                         soundTypewriter();
-                        write(" ");
+                        writeContent(" ");
                         break;
                     default: //Add text
                         soundTypewriter();
-                        write(String.fromCharCode(event.charCode));
+                        writeContent(String.fromCharCode(event.charCode));
                         break;
                 }
+                return false;
+            }
+
+            function handleInput(event) {
+               //Assume that the input-element contains the previous cursor.previousSibling + added content
+               var virtualKeyboardInput = document.getElementById("virtualKeyboardInput");
+               if (cursor.previousSibling === null) {
+                   writeContent(virtualKeyboardInput.value);
+               } else {
+                   var content = virtualKeyboardInput.value.split(cursor.previousSibling.textContent)[1];
+                   writeContent(content);
+               }
             }
 
             function soundTypewriter() {
@@ -213,6 +245,8 @@
                     cursor.parentElement.insertBefore(cursor, cursor.previousSibling);
 
                     cursor.parentElement.normalize(); //Merge textNodes that where introduced.
+
+                    updateVirtualKeyboard();
                     return;
                 }
                 if (cursor.previousSibling.nodeType == 3 && cursor.previousSibling.length > 1) { //Is a text node and must be splitted into two; the cursor is inserted between.
@@ -227,6 +261,8 @@
                     cursor.parentElement.insertBefore(cursor, textNodeAfter);
 
                     cursor.parentElement.normalize(); //Merge textNodes that where introduced.
+
+                    updateVirtualKeyboard();
                     return;
                 }
             }
@@ -240,6 +276,8 @@
                     cursor.parentElement.insertBefore(cursor, cursor.nextSibling.nextSibling); //Sadly there is no insert after.
 
                     cursor.parentElement.normalize(); //Merge textNodes that might be introduced.
+
+                    updateVirtualKeyboard();
                     return;
                 }
                 if (cursor.nextSibling.nodeType == 3 && cursor.nextSibling.length > 1) { //Is a text node and must be splitted into two; the cursor is inserted between.
@@ -255,6 +293,8 @@
                     cursor.parentElement.insertBefore(cursor, textNodeAfter);
 
                     cursor.parentElement.normalize(); //Merge textNodes that might be introduced (empty nodes are removed).
+
+                    updateVirtualKeyboard();
                     return;
                 }
             }
@@ -262,9 +302,12 @@
             function moveCursorPOS1() {
                 var cursor = document.getElementById("cursor");
                 currentParagraph.insertBefore(cursor, currentParagraph.childNodes[0]);
+                
+                updateVirtualKeyboard();
             }
             function moveCursorEND() {
                 currentParagraph.appendChild(cursor);
+                updateVirtualKeyboard();
             }
             //If index is null, value from newCurrentParagraph is taken.
             function moveCursorTo(newIndex, newCurrentParagraph) {
@@ -320,6 +363,16 @@
                 moveCursorTo(offset + additionalOffset, newCurrentParagraph);
             }
 
+            function updateVirtualKeyboard() {
+                var virtualKeyboardInput = document.getElementById("virtualKeyboardInput");
+                if (cursor.previousSibling === null) {
+                    virtualKeyboardInput.value = "";
+                } else {
+                    virtualKeyboardInput.value = cursor.previousSibling.textContent;
+                }
+                virtualKeyboardInput.setSelectionRange(virtualKeyboardInput.value.length, virtualKeyboardInput.value.length);
+            }
+
             function getCursorPosition() {
                 var cursor = document.getElementById("cursor");
                 if (cursor.previousSibling == undefined) return 0;
@@ -372,6 +425,8 @@
                 //New school: Just center the cursor.
                 var centeringOffset = (window.innerHeight / 2) - cursor.offsetTop;
                 page.style.top = centeringOffset + "px";
+                
+                updateVirtualKeyboard(); //Update content for the virtual keyboard as centerParagraph has to be called, if the paragraph changed.
             }
 
 
@@ -380,18 +435,20 @@
              *
              * Limitation: no sequences of whitespaces are written.
              */
-            function write(character) {
+            function writeContent(character) {
                 if (!(typeof character == 'string' || character instanceof String)) {
-                    console.log("Warning can only write strings")
+                    console.log("Warning can only write strings");
+                    return;
                 }
 
                 {//Handle new lines properly.
                     var textByLines = character.split("\n");
                     if (textByLines.length > 1) {
                         for (i = 0; i < textByLines.length; i++) {
-                            write(textByLines[i]);
+                            writeContent(textByLines[i]);
                             newParagraph();
                         }
+                        updateVirtualKeyboard();
                         return;
                     }
                 }
@@ -409,6 +466,8 @@
                 }
 
                 if (currentParagraphOldHeight != currentParagraph.offsetHeight) centerCurrentParagraph();
+
+                updateVirtualKeyboard();
             }
 
             function backspace(ctrl) {
@@ -449,6 +508,7 @@
                         if (toDeleteIndex == 0) cursor.previousSibling.remove();
                         else cursor.previousSibling.deleteData(toDeleteIndex, cursor.previousSibling.length - toDeleteIndex);
                     }
+                    updateVirtualKeyboard();
                 } else {
                     console.log("Error: Encountered a non-text node.");
                 }
@@ -492,6 +552,7 @@
                         if (toDeleteIndex == cursor.nextSibling.length) cursor.nextSibling.remove();
                         else cursor.nextSibling.deleteData(0, toDeleteIndex);
                     }
+                    updateVirtualKeyboard();
                 } else {
                     console.log("Error: Encountered a non-text node.");
                 }
@@ -583,7 +644,7 @@
 
                 if (event.clipboardData.types.indexOf("text/plain") >= 0) {
                     var content = event.clipboardData.getData("text/plain");
-                    write(content);
+                    writeContent(content);
                 }
             };
             document.oncopy = function (event) {
@@ -617,7 +678,7 @@
                 var typeSearchFuntion = event.dataTransfer.types.indexOf !== undefined ? event.dataTransfer.types.indexOf : event.dataTransfer.types.contains; //Compatibility fix for Firefox. Argghhh!!!!!!!1
                 if (typeSearchFuntion.call(event.dataTransfer.types, "text/plain") >= 0) {
                     var content = event.dataTransfer.getData("text/plain");
-                    write(content);
+                    writeContent(content);
                     console.log(content);
 
                     return; //Handle only PLAIN or FILES!
@@ -630,7 +691,7 @@
                         var reader = new FileReader();
                         reader.onload = function () {
                             content = reader.result;
-                            write(content);
+                            writeContent(content);
                             console.log(content);
                         };
                         reader.onerror = function () {
@@ -648,8 +709,9 @@
             function load() {
                 window.onresize();
 
+//                window.addEventListener("input", handleInput);
                 if (window.location.search.length > 0) {
-                    write(decodeURIComponent(window.location.search.substr(1, window.location.search.length)));
+                    writeContent(decodeURIComponent(window.location.search.substr(1, window.location.search.length)));
                 }
             };
         </script>
@@ -855,7 +917,7 @@
              ondrop="loadDrop(event)"
              draggable="true"
              ondblclick="saveDownload()"
-             tabindex="1" onkeypress="handleKeyPress(event)" onkeydown="handleKeyDown(event)" >
+             tabindex="1" onkeydown="handleKeyDown(event);" onkeypress="return handleKeyPress(event);">
             <div id="page" onclick="handleMouseClick(event)">
                 <div id="currentParagraph"><div id="cursor"></div></div>
             </div>
@@ -875,6 +937,7 @@
                 </div>
                 <div name="result" class="result" style="opacity:0"></div>
             </div>
+            <input id="virtualKeyboardInput" type="text" style="opacity:1" autofocus="autofocus" onblur="this.focus()" oninput="handleInput(event)"></input>
         </div>
     </body>
 </html>
