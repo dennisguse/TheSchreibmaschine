@@ -616,15 +616,14 @@
 
                 console.log("LoadDrop: we are loading now.");
 
-                var typeSearchFuntion = event.dataTransfer.types.indexOf !== undefined ? event.dataTransfer.types.indexOf : event.dataTransfer.types.contains; //Compatibility fix for Firefox. Argghhh!!!!!!!1
-                if (typeSearchFuntion.call(event.dataTransfer.types, "text/plain") >= 0) {
+                if (event.dataTransfer.types.indexOf("text/plain") >= 0) {
                     var content = event.dataTransfer.getData("text/plain");
                     write(content);
                     console.log(content);
 
                     return; //Handle only PLAIN or FILES!
                 }
-                if (typeSearchFuntion.call(event.dataTransfer.types, "Files") >= 0) {
+                if (event.dataTransfer.types.indexOf("Files") >= 0) {
                     var files = event.dataTransfer.files;
                     //Check how multiple files are handled.
                     for (var i = 0; i < files.length; i++) {
