@@ -573,7 +573,7 @@
                 downloadLink.download = fileNameToSaveAs;
                 downloadLink.innerHTML = "Download File";
                 downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
-                downloadLink.click();
+		downloadLink.dispatchEvent(new MouseEvent(`click`, {bubbles: true, cancelable: true, view: window}));
             }
         </script>
         <script type="text/javascript">
